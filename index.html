@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>新加坡三天兩夜旅遊行程</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal-dark: #085041; --teal-mid: #0F6E56; --teal-light: #1D9E75; --teal-pale: #E1F5EE; --teal-border: #5DCAA5;
+    --amber-dark: #633806; --amber-mid: #854F0B; --amber-light: #EF9F27; --amber-pale: #FAEEDA; --amber-border: #FAC775;
+    --blue-dark: #0C447C; --blue-mid: #185FA5; --blue-light: #378ADD; --blue-pale: #E6F1FB; --blue-border: #85B7EB;
+    --coral: #D85A30; --purple: #7F77DD; --pink: #D4537E; --gray: #888780;
+    --text-primary: #1a1a1a; --text-secondary: #666; --text-hint: #999;
+    --surface: #fff; --surface-2: #f7f7f5; --border: rgba(0,0,0,0.08);
+    --radius: 10px; --radius-sm: 6px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+  }
+  html, body { height: 100%; font-family: var(--font); background: #f5f4f0; color: var(--text-primary); }
+  body { display: flex; flex-direction: column; max-width: 430px; margin: 0 auto; min-height: 100vh; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(150deg, #0F6E56 0%, #085041 45%, #185FA5 100%);
+    padding: 1.5rem 1.25rem 1.1rem; color: #fff; position: relative; overflow: hidden; flex-shrink: 0;
+  }
+  .hero::after {
+    content: '✈'; position: absolute; right: 1rem; top: 0.25rem;
+    font-size: 5rem; opacity: 0.08; pointer-events: none;
+  }
+  .hero-eyebrow { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; margin-bottom: 0.3rem; }
+  .hero-title { font-size: 21px; font-weight: 600; line-height: 1.25; margin-bottom: 0.3rem; }
+  .hero-sub { font-size: 12.5px; opacity: 0.8; }
+  .hero-chips { display: flex; gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap; }
+  .chip { background: rgba(255,255,255,0.18); border: 0.5px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 2px 9px; font-size: 11.5px; }
+
+  /* Tab bar */
+  .tab-bar {
+    display: flex; background: var(--surface); border-bottom: 0.5px solid var(--border);
+    position: sticky; top: 0; z-index: 100; flex-shrink: 0;
+  }
+  .tab-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0.55rem 0.25rem 0.45rem;
+    border: none; background: none; cursor: pointer; position: relative;
+    color: var(--text-hint); font-family: var(--font); transition: color 0.15s;
+  }
+  .tab-btn.active { color: var(--text-primary); }
+  .tab-btn::after {
+    content: ''; position: absolute; bottom: 0; left: 15%; right: 15%; height: 2.5px;
+    border-radius: 2px; background: transparent; transition: background 0.15s;
+  }
+  .tab-btn.d1.active::after { background: var(--teal-light); }
+  .tab-btn.d2.active::after { background: var(--amber-light); }
+  .tab-btn.d3.active::after { background: var(--blue-light); }
+  .tab-dot { width: 7px; height: 7px; border-radius: 50%; margin-bottom: 3px; opacity: 0.5; transition: opacity 0.15s; }
+  .tab-btn.active .tab-dot { opacity: 1; }
+  .tab-btn.d1 .tab-dot { background: var(--teal-light); }
+  .tab-btn.d2 .tab-dot { background: var(--amber-light); }
+  .tab-btn.d3 .tab-dot { background: var(--blue-light); }
+  .tab-label { font-size: 12px; font-weight: 500; }
+  .tab-sub { font-size: 10px; opacity: 0.7; }
+
+  /* Tab panels */
+  .tab-content { flex: 1; overflow-y: auto; padding: 0.75rem; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Day header */
+  .day-header {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 1rem; border-radius: var(--radius); margin-bottom: 0.75rem; border: 0.5px solid transparent;
+  }
+  .day-header.d1 { background: var(--teal-pale); border-color: var(--teal-border); }
+  .day-header.d2 { background: var(--amber-pale); border-color: var(--amber-border); }
+  .day-header.d3 { background: var(--blue-pale); border-color: var(--blue-border); }
+  .day-num { font-size: 2rem; font-weight: 600; line-height: 1; }
+  .day-header.d1 .day-num { color: var(--teal-mid); }
+  .day-header.d2 .day-num { color: var(--amber-dark); }
+  .day-header.d3 .day-num { color: var(--blue-mid); }
+  .day-info {}
+  .day-date { font-size: 13.5px; font-weight: 600; }
+  .day-header.d1 .day-date { color: var(--teal-dark); }
+  .day-header.d2 .day-date { color: var(--amber-dark); }
+  .day-header.d3 .day-date { color: var(--blue-dark); }
+  .day-tagline { font-size: 11.5px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 2.25rem; }
+  .timeline::before {
+    content: ''; position: absolute; left: 0.65rem; top: 0.6rem; bottom: 0.6rem;
+    width: 1.5px; background: var(--border);
+  }
+  .entry { position: relative; margin-bottom: 0.625rem; }
+  .dot {
+    position: absolute; left: -1.6rem; top: 0.75rem;
+    width: 10px; height: 10px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--border);
+  }
+  .dot.eat   { background: var(--coral); }
+  .dot.sight { background: var(--teal-light); }
+  .dot.trans { background: var(--gray); }
+  .dot.stay  { background: var(--blue-mid); }
+  .dot.show  { background: var(--pink); }
+  .dot.land  { background: var(--purple); }
+  .dot.shop  { background: var(--amber-light); }
+
+  /* Card */
+  .card {
+    background: var(--surface); border: 0.5px solid var(--border);
+    border-radius: var(--radius); padding: 0.75rem; cursor: default;
+  }
+  .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.3rem; }
+  .card-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); line-height: 1.3; flex: 1; }
+  .card-time { font-size: 11px; color: var(--text-hint); white-space: nowrap; padding-top: 2px; }
+  .card-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin-bottom: 0.45rem; }
+  .tags { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 0.35rem; }
+  .tag { font-size: 10.5px; padding: 2px 7px; border-radius: 12px; font-weight: 500; white-space: nowrap; }
+  .tag.eat   { background: #FAECE7; color: #993C1D; }
+  .tag.sight { background: var(--teal-pale); color: var(--teal-dark); }
+  .tag.trans { background: #F1EFE8; color: #444; }
+  .tag.stay  { background: var(--blue-pale); color: var(--blue-dark); }
+  .tag.shop  { background: var(--amber-pale); color: var(--amber-dark); }
+  .tag.show  { background: #FBEAF0; color: #72243E; }
+  .tag.land  { background: #EEEDFE; color: #3C3489; }
+  .tag.free  { background: #EAF3DE; color: #27500A; }
+  .cost { font-size: 11.5px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; }
+  .cost-val { font-weight: 600; color: var(--text-primary); }
+  .tip {
+    font-size: 11.5px; background: var(--surface-2); border-radius: var(--radius-sm);
+    padding: 5px 8px; color: var(--text-secondary); margin-top: 0.35rem; line-height: 1.5;
+  }
+
+  /* Budget panel */
+  .budget-card {
+    background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 0.75rem;
+  }
+  .budget-head-bar {
+    background: linear-gradient(90deg, var(--teal-mid), var(--blue-mid));
+    padding: 0.75rem 1rem; color: #fff;
+  }
+  .budget-head-title { font-size: 14px; font-weight: 600; }
+  .budget-head-sub { font-size: 11.5px; opacity: 0.8; margin-top: 2px; }
+  .budget-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1rem; border-bottom: 0.5px solid var(--border); }
+  .budget-row:last-of-type { border-bottom: none; }
+  .budget-label { font-size: 13px; color: var(--text-secondary); }
+  .budget-amt { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .budget-total { background: var(--teal-pale); display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border-top: 1px solid var(--teal-border); }
+  .budget-total-label { font-size: 14px; font-weight: 600; color: var(--teal-dark); }
+  .budget-total-amt { font-size: 18px; font-weight: 700; color: var(--teal-mid); }
+  .note { font-size: 11px; text-align: center; color: var(--text-hint); padding: 0.5rem 0 0.25rem; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">新加坡三天兩夜</div>
+  <div class="hero-title">城市灣景 × 環球探索<br>南洋美食之旅</div>
+  <div class="hero-sub">酷航直飛 · 2025 夏季</div>
+  <div class="hero-chips">
+    <span class="chip">7/22–7/24</span>
+    <span class="chip">兩人同行</span>
+    <span class="chip">預估 $17,595–$19,095 / 人</span>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn d1 active" onclick="switchTab('d1')">
+    <div class="tab-dot"></div>
+    <div class="tab-label">Day 1</div>
+    <div class="tab-sub">7/22 (三)</div>
+  </button>
+  <button class="tab-btn d2" onclick="switchTab('d2')">
+    <div class="tab-dot"></div>
+    <div class="tab-label">Day 2</div>
+    <div class="tab-sub">7/23 (四)</div>
+  </button>
+  <button class="tab-btn d3" onclick="switchTab('d3')">
+    <div class="tab-dot"></div>
+    <div class="tab-label">Day 3</div>
+    <div class="tab-sub">7/24 (五)</div>
+  </button>
+  <button class="tab-btn" onclick="switchTab('budget')" style="">
+    <div class="tab-dot" style="background:#888;"></div>
+    <div class="tab-label">預算</div>
+    <div class="tab-sub">總覽</div>
+  </button>
+</div>
+
+<div class="tab-content">
+
+  <!-- Day 1 -->
+  <div class="panel active" id="panel-d1">
+    <div class="day-header d1">
+      <div class="day-num">01</div>
+      <div class="day-info">
+        <div class="day-date">7/22 (三) — Day 1</div>
+        <div class="day-tagline">抵埗 → 市區 → 濱海灣 → 入住</div>
+      </div>
+    </div>
+    <div class="timeline">
+
+      <div class="entry">
+        <div class="dot land"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">抵達新加坡 · 順暢通關</div>
+            <div class="card-time">05:20–06:30</div>
+          </div>
+          <div class="card-desc">酷航降落，輕裝無大行李，流暢出關。</div>
+          <div class="tags"><span class="tag land">入境</span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="dot eat"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">星耀樟宜 · 亞坤南洋早餐</div>
+            <div class="card-time">06:30–09:30</div>
+          </div>
+          <div class="card-desc">步行至星耀樟宜，享用咖椰吐司、半熟蛋、Kopi。清晨人潮最少，可拍攝靜謐植物園空景。雨漩渦瀑布 10:00 才正式放水，先不在此等候。</div>
+          <div class="tags"><span class="tag eat">南洋早餐</span><span class="tag sight">星耀樟宜</span><span class="tag trans">步行直達</span></div>
+          <div class="cost">預估：<span class="cost-val">$200–$300 TWD</span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="dot sight"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">市區地標 · 魚尾獅 × 駁船碼頭</div>
+            <div class="card-time">09:30–13:00</div>
+          </div>
+          <div class="card-desc">魚尾獅公園拍攝與金沙酒店合影的經典噴水照，沿新加坡河畔漫步至駁船碼頭，欣賞殖民風情建築。</div>
+          <div class="tags"><span class="tag sight">必打卡地標</span><span class="tag trans">地鐵東西線（綠線）</span></div>
+          <div class="cost">交通：<span class="cost-val">Apple Pay 感應</span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="dot eat"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">牛車水 · 天天海南雞飯午餐</div>
+            <div class="card-time">13:00–16:30</div>
+          </div>
+          <div class="card-desc">麥士威熟食中心品嚐知名「天天海南雞飯」，環境乾淨衛生。午後氣溫高，可至懷舊咖啡店消磨，或參觀有冷氣的佛牙寺龍華院。</div>
+          <div class="tags"><span class="tag eat">海南雞飯</span><span class="tag sight">佛牙寺</span><span class="tag trans">地鐵至 Chinatown</span></div>
+          <div class="cost">預估：<span class="cost-val">$300–$500 TWD</span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="dot sight"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">濱海灣花園 · 雲霧林冷室</div>
+            <div class="card-time">17:00–19:45</div>
+          </div>
+          <div class="card-desc">極度推薦進入「雲霧林 (Cloud Forest)」——室內植物高牆與大瀑布，冷氣舒適且視覺極為震撼，是全程最值得入場的景點之一。</div>
+          <div class="tags"><span class="tag sight">雲霧林</span><span class="tag trans">地鐵至濱海灣花園站</span></div>
+          <div class="cost">門票：<span class="cost-val">約 $1,130 TWD / 人</span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="dot show"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">超級樹燈光秀 & 金沙晚餐 & 水舞秀</div>
+            <div class="card-time">19:45–22:00</div>
+          </div>
+          <div class="card-desc">19:45 在戶外草地觀賞免費超級樹燈光秀。步行至金沙購物商城晚餐（黃亞細肉骨茶或美食街），21:30 戶外廣場欣賞「幻彩詠香江」水舞秀。</div>
+          <div class="tags"><span class="tag show">超級樹燈光秀</span><span class="tag show">水舞秀</span><span class="tag eat">晚餐</span><span class="tag free">燈光免費</span></div>
+          <div class="cost">晚餐預估：<span class="cost-val">$400–$600 TWD</span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="dot stay"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">叫車 Check-in · D'Resort 補眠</div>
+            <div class="card-time">22:00–22:30</div>
+          </div>
+          <div class="card-desc">市區行程完美收尾，Grab / CDG Zig 叫車前往東北部 D'Resort @ Downtown East，車程約 30 分鐘，抵達即入住補眠。</div>
+          <div class="tags"><span class="tag stay">入住飯店</span><span class="tag trans">Grab / CDG Zig（30 分）</span></div>
+          <div class="cost">叫車（兩人均攤）：<span class="cost-val">$600–$800 TWD</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="panel" id="panel-d2">
+    <div class="day-header d2">
+      <div class="day-num">02</div>
+      <div class="day-info">
+        <div class="day-date">7/23 (四) — Day 2</div>
+        <div class="day-tagline">環球影城全日 → 怡豐城晚餐採購</div>
+      </div>
+    </div>
+    <div class="timeline">
+
+      <div class="entry">
+        <div class="dot trans"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">前往聖淘沙島</div>
+            <div class="card-time">08:30–10:00</div>
+          </div>
+          <div class="card-desc">睡飽體力充沛，準備迎接重點行程。為保留完整戰鬥力，建議叫車直達聖淘沙，省去換乘消耗。</div>
+          <div class="tags"><span class="tag trans">Grab 叫車直達</span></div>
+          <div class="cost">（兩人均攤）：<span class="cost-val">$600–$800 TWD</span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="dot sight"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">新加坡環球影城 · 全日暢玩</div>
+            <div class="card-time">10:00–18:00</div>
+          </div>
+          <div class="card-desc">平日週四人潮少，一入園先衝「變形金剛 3D 對決」與「木乃伊復仇記」。輕裝無行李移動極度流暢，快速通關視現場人潮再決定是否加購。</div>
+          <div class="tags"><span class="tag sight">環球影城</span><span class="tag trans">島內步行</span></div>
+          <div class="cost">門票（建議 Klook 預購）：<span class="cost-val">約 $2,150 TWD</span></div>
+          <div class="tip">💡 Klook 預購比現場購票便宜，建議事先安排</div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="dot shop"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">怡豐城 VivoCity · 晚餐 & 伴手禮採購</div>
+            <div class="card-time">18:30 之後</div>
+          </div>
+          <div class="card-desc">出園後搭聖淘沙捷運至怡豐城。大食代美食街享用本地料理，隨後在島內大型超市一次採買叻沙泡麵、咖椰醬等伴手禮，直接塞入隨身背包。</div>
+          <div class="tags"><span class="tag eat">本地料理</span><span class="tag shop">伴手禮採購</span><span class="tag trans">聖淘沙捷運至 VivoCity</span></div>
+          <div class="cost">晚餐 + 採買：<span class="cost-val">$800–$1,500 TWD</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Day 3 -->
+  <div class="panel" id="panel-d3">
+    <div class="day-header d3">
+      <div class="day-num">03</div>
+      <div class="day-info">
+        <div class="day-date">7/24 (五) — Day 3</div>
+        <div class="day-tagline">退房 → 雨漩渦補拍 → 返台</div>
+      </div>
+    </div>
+    <div class="timeline">
+
+      <div class="entry">
+        <div class="dot trans"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">辦理退房 · 叫車機場</div>
+            <div class="card-time">09:00–09:30</div>
+          </div>
+          <div class="card-desc">D'Resort 距機場極近，叫車約 15 分鐘直達。輕裝出發，無需擔心行李轉運。</div>
+          <div class="tags"><span class="tag trans">Grab / CDG Zig（15 分）</span></div>
+          <div class="cost">（兩人均攤）：<span class="cost-val">$300–$400 TWD</span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="dot sight"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">★ 雨漩渦大瀑布補拍 · 完美收尾</div>
+            <div class="card-time">10:00–12:25</div>
+          </div>
+          <div class="card-desc">酷航 12:25 起飛。10:00 機場辦妥登機與通關後，步行至星耀樟宜觀景台，補拍「雨漩渦瀑布」正式大放水的壯觀畫面——完美彌補 Day 1 清晨未等到的遺憾。</div>
+          <div class="tags"><span class="tag sight">雨漩渦瀑布</span><span class="tag free">觀景台免費</span><span class="tag trans">步行直達</span></div>
+          <div class="tip">✈ 12:25 起飛 — 建議 10:00 前完成通關保留緩衝</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Budget -->
+  <div class="panel" id="panel-budget">
+    <div class="budget-card">
+      <div class="budget-head-bar">
+        <div class="budget-head-title">💰 預算總覽</div>
+        <div class="budget-head-sub">以下均為單人費用估算（新台幣）</div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-label">✈ 酷航來回機票</div>
+        <div class="budget-amt">$7,375</div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-label">🏨 D'Resort 住宿（兩夜均攤）</div>
+        <div class="budget-amt">$3,440</div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-label">🎡 環球影城門票</div>
+        <div class="budget-amt">$2,150</div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-label">🌿 雲霧林（Cloud Forest）門票</div>
+        <div class="budget-amt">$1,130</div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-label">🍜 餐飲費（3天）</div>
+        <div class="budget-amt">$1,200–$2,000</div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-label">🚗 叫車費（Grab / CDG Zig）</div>
+        <div class="budget-amt">$900–$1,200</div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-label">🛍 伴手禮 & 雜支</div>
+        <div class="budget-amt">$1,400–$1,800</div>
+      </div>
+      <div class="budget-total">
+        <div class="budget-total-label">預估總花費 / 人</div>
+        <div class="budget-total-amt">$17,595–$19,095</div>
+      </div>
+    </div>
+
+    <div class="budget-card">
+      <div style="padding:0.75rem 1rem; border-bottom: 0.5px solid var(--border);">
+        <div style="font-size:13.5px;font-weight:600;margin-bottom:0.35rem;">💡 省錢 Tips</div>
+      </div>
+      <div style="padding:0.75rem 1rem; display:flex; flex-direction:column; gap:0.6rem;">
+        <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.5;">🎟 環球影城 + 雲霧林門票建議在 <strong>Klook</strong> 預購，可省 10–15%。</div>
+        <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.5;">🚇 地鐵建議開通 <strong>Apple Pay</strong> 或購買 EZ-Link 卡，避免單程票溢價。</div>
+        <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.5;">🛒 伴手禮在 <strong>怡豐城超市</strong> 購買，比機場或景點商店便宜許多。</div>
+        <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.5;">🌊 超級樹燈光秀 & 幻彩詠香江水舞秀皆為 <strong>免費</strong>，善加利用戶外精華時段。</div>
+      </div>
+    </div>
+
+    <div class="note">以上費用單位為新台幣（TWD）<br>實際花費視匯率與個人消費習慣而定</div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(function(btn) { btn.classList.remove('active'); });
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  var map = { d1: 0, d2: 1, d3: 2, budget: 3 };
+  document.querySelectorAll('.tab-btn')[map[id]].classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelector('.tab-content').scrollTop = 0;
+}
+</script>
+</body>
+</html>
