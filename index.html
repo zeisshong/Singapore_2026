@@ -115,8 +115,17 @@
   }
   .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.35rem; }
   .card-title { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); line-height: 1.3; flex: 1; }
-  .card-time { font-size: 0.7rem; color: var(--text-hint); white-space: nowrap; padding-top: 0.15rem; }
+  .card-time {
+    font-size: 0.75rem; font-weight: 700; white-space: nowrap; letter-spacing: 0.01em;
+    padding: 0.2rem 0.6rem; border-radius: 999px; color: #fff; flex-shrink: 0;
+  }
+  #panel-d1 .card-time { background: var(--teal-mid); }
+  #panel-d2 .card-time { background: var(--amber-mid); }
+  #panel-d3 .card-time { background: var(--blue-mid); }
   .card-desc { font-size: 0.825rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0.5rem; }
+  .card-desc-list { font-size: 0.825rem; color: var(--text-secondary); line-height: 1.55; margin: 0 0 0.5rem 0; padding-left: 1.15rem; }
+  .card-desc-list li { margin-bottom: 0.3rem; }
+  .card-desc-list li:last-child { margin-bottom: 0; }
   .tags { display: flex; flex-wrap: wrap; gap: 0.2rem; margin-bottom: 0.4rem; }
   .tag { font-size: 0.68rem; padding: 0.15rem 0.45rem; border-radius: 12px; font-weight: 500; white-space: nowrap; }
   .tag.eat   { background: #FAECE7; color: #993C1D; }
@@ -257,7 +266,10 @@
             <div class="card-title">抵達新加坡 · 通關</div>
             <div class="card-time">05:20–07:00</div>
           </div>
-          <div class="card-desc">TR 873 落地 T1（06:00）。過海關、提行李，預計 07:00 出關。</div>
+          <ul class="card-desc-list">
+            <li>TR 873 落地 T1（06:00）。</li>
+            <li>過海關、提行李，預計 07:00 出關。</li>
+          </ul>
           <div class="tags"><span class="tag land">入境</span></div>
           <div class="cost">航班：<span class="cost-val">TR 873 · TPE T1 01:35 → SIN T1 06:00</span></div>
         </div>
@@ -270,8 +282,12 @@
             <div class="card-title">星耀樟宜 · 亞坤早餐</div>
             <div class="card-time">07:00–09:30</div>
           </div>
-          <div class="card-desc">行李寄存於星耀樟宜 L1 Smarte Carte（S$8–12）。推薦點 A 套餐：咖椰吐司＋半熟蛋＋飲料，飲料點 Iced Milk Tea Siew Dai（少糖）。清晨人少，可拍室內瀑布空景（雨漩渦 10:00 才放水）。</div>
-          <div class="tags"><span class="tag eat">南洋早餐</span><span class="tag sight">星耀樟宜</span><span class="tag trans">步行直達</span></div>
+          <ul class="card-desc-list">
+            <li>行李寄存於星耀樟宜 L1 Smarte Carte（S$8–12）。</li>
+            <li>推薦點 A 套餐：咖椰吐司＋半熟蛋＋飲料，飲料點 Iced Milk Tea Siew Dai（少糖）。</li>
+            <li>清晨人少，可拍室內瀑布空景（雨漩渦 10:00 才放水）。</li>
+          </ul>
+          <div class="tags"><span class="tag trans">步行直達</span><span class="tag eat">南洋早餐</span><span class="tag sight">星耀樟宜</span></div>
           <div class="cost">行李寄存：<span class="cost-val">S$8–12 / NT$200–300</span></div>
           <div class="cost">早餐（兩人）：<span class="cost-val">S$10–15 / NT$250–375</span></div>
           <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
@@ -288,7 +304,10 @@
             <div class="card-title">交通 · 星耀樟宜 → 牛車水</div>
             <div class="card-time">約 45 分鐘</div>
           </div>
-          <div class="card-desc">T1 搭免費 Skytrain 至 T3 → 綠線 CG2 出發 → Tanah Merah（EW4）換車 → Outram Park（EW16）下車。</div>
+          <ul class="card-desc-list">
+            <li>T1 搭免費 Skytrain 至 T3。</li>
+            <li>綠線 CG2 出發 → Tanah Merah（EW4）換車 → Outram Park（EW16）下車。</li>
+          </ul>
           <div class="tags"><span class="tag trans">綠線 EW</span><span class="tag trans">Apple Pay 感應</span></div>
           <div class="cost">車資（兩人）：<span class="cost-val">S$4–5 / NT$100–125</span></div>
         </div>
@@ -301,7 +320,10 @@
             <div class="card-title">牛車水 · 先逛老街</div>
             <div class="card-time">09:30–11:00</div>
           </div>
-          <div class="card-desc">Outram Park 站步行約 5 分鐘進入中國城範圍。老街騎樓、佛牙寺外觀拍照，感受氛圍。</div>
+          <ul class="card-desc-list">
+            <li>Outram Park 站步行約 5 分鐘進入中國城範圍。</li>
+            <li>老街騎樓、佛牙寺外觀拍照，感受氛圍。</li>
+          </ul>
           <div class="tags"><span class="tag sight">中國城老街</span><span class="tag sight">佛牙寺外觀</span></div>
           <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
             <a class="map-link" href="https://maps.app.goo.gl/eHaJrfxMH7RjorNY8">佛牙寺龍華院</a>
@@ -316,7 +338,11 @@
             <div class="card-title">松發肉骨茶 · 唐城坊 B1</div>
             <div class="card-time">11:00–12:30</div>
           </div>
-          <div class="card-desc">NE4 牛車水站 E 出口步行 3–5 分鐘。平日中午約等 15 分鐘入座，排隊時掃 QR code 點餐。推薦：排骨肉骨茶＋油條＋滷味，湯免費續加。</div>
+          <ul class="card-desc-list">
+            <li>NE4 牛車水站 E 出口步行 3–5 分鐘。</li>
+            <li>平日中午約等 15 分鐘入座，排隊時掃 QR code 點餐。</li>
+            <li>推薦：排骨肉骨茶＋油條＋滷味，湯免費續加。</li>
+          </ul>
           <div class="tags"><span class="tag eat">肉骨茶</span></div>
           <div class="cost">午餐（兩人）：<span class="cost-val">S$25–35 / NT$625–875</span></div>
         </div>
@@ -329,7 +355,11 @@
             <div class="card-title">牛車水 · 中國城下午 & 朋友會合</div>
             <div class="card-time">12:30–16:30</div>
           </div>
-          <div class="card-desc">12:30–15:00 最熱，進佛牙寺龍華院或唐城坊商場吹冷氣。15:00 後戶外老街走動、買伴手禮。13:30 起可與朋友會合，一起逛至 16:00 團體離開。</div>
+          <ul class="card-desc-list">
+            <li>12:30–15:00 最熱，進佛牙寺龍華院或唐城坊商場吹冷氣。</li>
+            <li>15:00 後戶外老街走動、買伴手禮。</li>
+            <li>13:30 起可與朋友會合，一起逛至 16:00 團體離開。</li>
+          </ul>
           <div class="tags"><span class="tag sight">佛牙寺龍華院</span><span class="tag sight">唐城坊</span></div>
           <div class="tip">👥 朋友 13:30–16:00 於牛車水會合，會請客，可省一餐</div>
         </div>
@@ -342,7 +372,9 @@
             <div class="card-title">交通 · 牛車水 → Bayfront</div>
             <div class="card-time">約 15–20 分鐘</div>
           </div>
-          <div class="card-desc">NE4 牛車水站 → 藍線 → DT16 Bayfront 站。</div>
+          <ul class="card-desc-list">
+            <li>NE4 牛車水站 → 藍線 → DT16 Bayfront 站。</li>
+          </ul>
           <div class="tags"><span class="tag trans">藍線 DT</span></div>
           <div class="cost">車資（兩人）：<span class="cost-val">S$3–4 / NT$75–100</span></div>
         </div>
@@ -355,8 +387,12 @@
             <div class="card-title">濱海灣花園 · 超級樹燈光秀</div>
             <div class="card-time">17:00–19:45</div>
           </div>
-          <div class="card-desc">Bayfront 出站步行約 10 分鐘抵達超級樹。Garden Rhapsody 燈光秀 19:45 開演，免費，約 15 分鐘。體力不足可跳過，直接前往 MBS 等水舞秀。</div>
-          <div class="tags"><span class="tag show">超級樹燈光秀</span><span class="tag free">免費</span><span class="tag trans">步行 10 分</span></div>
+          <ul class="card-desc-list">
+            <li>Bayfront 出站步行約 10 分鐘抵達超級樹。</li>
+            <li>Garden Rhapsody 燈光秀 19:45 開演，免費，約 15 分鐘。</li>
+            <li>體力不足可跳過，直接前往 MBS 等水舞秀。</li>
+          </ul>
+          <div class="tags"><span class="tag trans">步行 10 分</span><span class="tag show">超級樹燈光秀</span><span class="tag free">免費</span></div>
           <a class="map-link" href="https://maps.app.goo.gl/3Bx3gZR4ECoRcYwG7">超級樹廣場</a>
         </div>
       </div>
@@ -368,7 +404,10 @@
             <div class="card-title">Spectra 水舞秀</div>
             <div class="card-time">19:55–20:15</div>
           </div>
-          <div class="card-desc">超級樹步行約 10 分鐘至 MBS 廣場。Spectra 水舞秀 20:00 開演（週三場次），免費，約 15 分鐘。</div>
+          <ul class="card-desc-list">
+            <li>超級樹步行約 10 分鐘至 MBS 廣場。</li>
+            <li>Spectra 水舞秀 20:00 開演（週三場次），免費，約 15 分鐘。</li>
+          </ul>
           <div class="tags"><span class="tag show">Spectra 水舞秀</span><span class="tag free">免費</span></div>
           <a class="map-link" href="https://maps.app.goo.gl/9M9RmCCT1juQ8HTh8">金沙購物商城 / MBS</a>
         </div>
@@ -381,7 +420,10 @@
             <div class="card-title">晚餐 · MBS Rasapura Masters</div>
             <div class="card-time">20:15–21:15</div>
           </div>
-          <div class="card-desc">水舞秀結束直接走進 MBS B2 美食街。海南雞飯、叻沙、手搖飲等，選擇多。</div>
+          <ul class="card-desc-list">
+            <li>水舞秀結束直接走進 MBS B2 美食街。</li>
+            <li>海南雞飯、叻沙、手搖飲等，選擇多。</li>
+          </ul>
           <div class="tags"><span class="tag eat">美食街</span></div>
           <div class="cost">晚餐（兩人）：<span class="cost-val">S$20–30 / NT$500–750</span></div>
         </div>
@@ -394,8 +436,13 @@
             <div class="card-title">叫車回飯店 · D'Resort 入住</div>
             <div class="card-time">21:15–22:30</div>
           </div>
-          <div class="card-desc">第一趟 Grab：MBS → 樟宜機場 T1（約 20 分鐘），步行至星耀樟宜 L1 取回寄存行李（約 10–15 分鐘）。第二趟 Grab：樟宜機場 → D'Resort（約 15 分鐘）。22:30 抵達，入住補眠。</div>
-          <div class="tags"><span class="tag stay">入住飯店</span><span class="tag trans">Grab ×2 趟</span></div>
+          <ul class="card-desc-list">
+            <li>第一趟 Grab：MBS → 樟宜機場 T1（約 20 分鐘）。</li>
+            <li>步行至星耀樟宜 L1 取回寄存行李（約 10–15 分鐘）。</li>
+            <li>第二趟 Grab：樟宜機場 → D'Resort（約 15 分鐘）。</li>
+            <li>22:30 抵達，入住補眠。</li>
+          </ul>
+          <div class="tags"><span class="tag trans">Grab ×2 趟</span><span class="tag stay">入住飯店</span></div>
           <div class="cost">Grab · MBS→機場：<span class="cost-val">S$15–18 / NT$375–450</span></div>
           <div class="cost">Grab · 機場→D'Resort：<span class="cost-val">S$12–15 / NT$300–375</span></div>
           <div class="cost">Agoda 訂單：<span class="cost-val mono">1745143444</span></div>
@@ -421,12 +468,15 @@
         <div class="dot trans"></div>
         <div class="card">
           <div class="card-head">
-            <div class="card-title">前往聖淘沙島</div>
+            <div class="card-title">交通 · D'Resort → 聖淘沙</div>
             <div class="card-time">08:30–10:00</div>
           </div>
-          <div class="card-desc">睡飽體力充沛，準備迎接重點行程。為保留完整戰鬥力，建議叫車直達聖淘沙，省去換乘消耗。</div>
+          <ul class="card-desc-list">
+            <li>睡飽體力充沛，準備迎接重點行程。</li>
+            <li>建議叫車直達聖淘沙島內，省去換乘消耗，保留完整戰鬥力。</li>
+          </ul>
           <div class="tags"><span class="tag trans">Grab 叫車直達</span></div>
-          <div class="cost">（兩人均攤）：<span class="cost-val">$600–$800 TWD</span></div>
+          <div class="cost">Grab（兩人均攤）：<span class="cost-val">$600–$800 TWD</span></div>
         </div>
       </div>
 
@@ -437,11 +487,30 @@
             <div class="card-title">新加坡環球影城 · 全日暢玩</div>
             <div class="card-time">10:00–18:00</div>
           </div>
-          <div class="card-desc">平日週四人潮少，一入園先衝「變形金剛 3D 對決」與「木乃伊復仇記」。輕裝無行李移動極度流暢，快速通關視現場人潮再決定是否加購。</div>
-          <div class="tags"><span class="tag sight">環球影城</span><span class="tag trans">島內步行</span></div>
+          <ul class="card-desc-list">
+            <li>平日週四人潮少，一入園先衝「變形金剛 3D 對決」與「木乃伊復仇記」。</li>
+            <li>輕裝無行李移動極度流暢，快速通關視現場人潮再決定是否加購。</li>
+          </ul>
+          <div class="tags"><span class="tag trans">島內步行</span><span class="tag sight">環球影城</span></div>
           <div class="cost">門票（建議 Klook 預購）：<span class="cost-val">約 $2,150 TWD</span></div>
           <div class="tip">💡 Klook 預購比現場購票便宜，建議事先安排</div>
           <a class="map-link" href="https://maps.app.goo.gl/nTucMJ1Xcdu2zNpH8">新加坡環球影城</a>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="dot trans"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">交通 · 聖淘沙 → 怡豐城</div>
+            <div class="card-time">約 15 分鐘</div>
+          </div>
+          <ul class="card-desc-list">
+            <li>出園後於環球影城站搭乘聖淘沙捷運（Sentosa Express）。</li>
+            <li>直達 VivoCity 怡豐城站，出站即達商場。</li>
+          </ul>
+          <div class="tags"><span class="tag trans">聖淘沙捷運</span></div>
+          <div class="cost">車資（兩人）：<span class="cost-val">S$8 / NT$200</span></div>
         </div>
       </div>
 
@@ -452,8 +521,11 @@
             <div class="card-title">怡豐城 VivoCity · 晚餐 & 伴手禮採購</div>
             <div class="card-time">18:30 之後</div>
           </div>
-          <div class="card-desc">出園後搭聖淘沙捷運至怡豐城。大食代美食街享用本地料理，隨後在島內大型超市一次採買叻沙泡麵、咖椰醬等伴手禮，直接塞入隨身背包。</div>
-          <div class="tags"><span class="tag eat">本地料理</span><span class="tag shop">伴手禮採購</span><span class="tag trans">聖淘沙捷運至 VivoCity</span></div>
+          <ul class="card-desc-list">
+            <li>大食代美食街享用本地料理。</li>
+            <li>隨後在島內大型超市一次採買叻沙泡麵、咖椰醬等伴手禮，直接塞入隨身背包。</li>
+          </ul>
+          <div class="tags"><span class="tag eat">本地料理</span><span class="tag shop">伴手禮採購</span></div>
           <div class="cost">晚餐 + 採買：<span class="cost-val">$800–$1,500 TWD</span></div>
           <a class="map-link" href="https://maps.app.goo.gl/9AKxWBk5fzjKr8kaA">怡豐城 VivoCity</a>
         </div>
@@ -477,12 +549,15 @@
         <div class="dot trans"></div>
         <div class="card">
           <div class="card-head">
-            <div class="card-title">辦理退房 · 叫車機場</div>
+            <div class="card-title">交通 · 辦理退房 · D'Resort → 機場</div>
             <div class="card-time">09:00–09:30</div>
           </div>
-          <div class="card-desc">D'Resort 距機場極近，叫車約 15 分鐘直達。輕裝出發，無需擔心行李轉運。</div>
+          <ul class="card-desc-list">
+            <li>D'Resort 距機場極近，叫車約 15 分鐘直達。</li>
+            <li>輕裝出發，無需擔心行李轉運。</li>
+          </ul>
           <div class="tags"><span class="tag trans">Grab / CDG Zig（15 分）</span></div>
-          <div class="cost">（兩人均攤）：<span class="cost-val">$300–$400 TWD</span></div>
+          <div class="cost">Grab（兩人均攤）：<span class="cost-val">$300–$400 TWD</span></div>
         </div>
       </div>
 
@@ -493,8 +568,12 @@
             <div class="card-title">★ 雨漩渦大瀑布補拍 · 完美收尾</div>
             <div class="card-time">10:00–12:25</div>
           </div>
-          <div class="card-desc">酷航 TR 872 於 12:25 起飛。10:00 機場辦妥登機與通關後，步行至星耀樟宜觀景台，補拍「雨漩渦瀑布」正式大放水的壯觀畫面——完美彌補 Day 1 清晨未等到的遺憾。</div>
-          <div class="tags"><span class="tag sight">雨漩渦瀑布</span><span class="tag free">觀景台免費</span><span class="tag trans">步行直達</span></div>
+          <ul class="card-desc-list">
+            <li>酷航 TR 872 於 12:25 起飛，10:00 機場辦妥登機與通關。</li>
+            <li>步行至星耀樟宜觀景台，補拍「雨漩渦瀑布」正式大放水的壯觀畫面。</li>
+            <li>完美彌補 Day 1 清晨未等到的遺憾。</li>
+          </ul>
+          <div class="tags"><span class="tag trans">步行直達</span><span class="tag sight">雨漩渦瀑布</span><span class="tag free">觀景台免費</span></div>
           <div class="cost">航班：<span class="cost-val">TR 872 · SIN T1 12:25 → TPE T1 17:10</span></div>
           <div class="tip">✈ 12:25 起飛 — 建議 10:00 前完成通關保留緩衝</div>
           <a class="map-link" href="https://maps.app.goo.gl/jJEzXUFap8PMG3Vd9">星耀樟宜觀景台</a>
