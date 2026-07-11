@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>新加坡旅遊記帳</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: clamp(16.5px, 2.4vw, 19px); }
+  :root {
+    --teal-dark: #085041; --teal-mid: #0F6E56; --teal-light: #1D9E75; --teal-pale: #E1F5EE; --teal-border: #5DCAA5;
+    --amber-dark: #633806; --amber-mid: #854F0B; --amber-light: #EF9F27; --amber-pale: #FAEEDA; --amber-border: #FAC775;
+    --blue-dark: #0C447C; --blue-mid: #185FA5; --blue-light: #378ADD; --blue-pale: #E6F1FB; --blue-border: #85B7EB;
+    --coral: #D85A30; --purple: #7F77DD; --pink: #D4537E; --gray: #888780;
+    --text-primary: #1a1a1a; --text-secondary: #666; --text-hint: #999;
+    --surface: #fff; --surface-2: #f7f7f5; --border: rgba(0,0,0,0.08);
+    --radius: 0.625rem; --radius-sm: 0.375rem;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+  }
+  html, body { font-family: var(--font); background: #f5f4f0; color: var(--text-primary); }
+  body { max-width: 780px; margin: 0 auto; padding-bottom: 5rem; }
+
+  .header {
+    background: linear-gradient(150deg, #0F6E56 0%, #085041 45%, #185FA5 100%);
+    color: #fff; padding: 0.9rem 1.25rem 1rem;
+  }
+  .header-back { font-size: 0.78rem; opacity: 0.85; text-decoration: none; color: #fff; }
+  .header-title { font-size: clamp(1.1rem, 2.6vw, 1.4rem); font-weight: 600; margin-top: 0.3rem; }
+  .header-sub { font-size: 0.75rem; opacity: 0.8; margin-top: 0.15rem; }
+
+  .tabs { display: flex; background: var(--surface); border-bottom: 0.5px solid var(--border); position: sticky; top: 0; z-index: 50; }
+  .tab-btn { flex: 1; padding: 0.7rem 0; text-align: center; border: none; background: none; font-family: var(--font); font-size: 0.85rem; font-weight: 500; color: var(--text-hint); cursor: pointer; position: relative; }
+  .tab-btn.active { color: var(--text-primary); }
+  .tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2.5px; background: var(--teal-light); border-radius: 2px; }
+
+  .content { padding: 1rem; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+  .stat-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.9rem; }
+  .stat-label { font-size: 0.72rem; color: var(--text-hint); margin-bottom: 0.3rem; }
+  .stat-value { font-size: clamp(1.2rem, 2.8vw, 1.5rem); font-weight: 700; color: var(--teal-mid); }
+
+  .section-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 0.9rem; }
+  .section-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.7rem; color: var(--text-primary); }
+
+  .chart-box { max-width: 200px; margin: 0 auto 0.8rem; }
+  .legend-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; padding: 0.25rem 0; }
+  .legend-name { display: flex; align-items: center; gap: 0.4rem; color: var(--text-secondary); }
+  .legend-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; flex-shrink: 0; }
+
+  .expense-item { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.8rem 0.9rem; margin-bottom: 0.6rem; }
+  .expense-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
+  .expense-place { font-size: 0.88rem; font-weight: 600; }
+  .expense-desc { font-size: 0.76rem; color: var(--text-secondary); margin-top: 0.15rem; }
+  .expense-amt { font-size: 0.95rem; font-weight: 700; color: var(--teal-mid); white-space: nowrap; }
+  .expense-meta { display: flex; gap: 0.4rem; margin-top: 0.5rem; flex-wrap: wrap; }
+  .chip { font-size: 0.68rem; padding: 0.15rem 0.5rem; border-radius: 20px; background: var(--surface-2); color: var(--text-secondary); }
+  .expense-del { font-size: 0.72rem; color: var(--coral); background: none; border: none; margin-top: 0.5rem; cursor: pointer; padding: 0; }
+
+  .empty-hint { text-align: center; color: var(--text-hint); font-size: 0.82rem; padding: 2rem 0; }
+
+  .fab { position: fixed; right: 1.1rem; bottom: 1.3rem; width: 3.4rem; height: 3.4rem; border-radius: 50%;
+    background: linear-gradient(135deg, #0F6E56, #185FA5); color: #fff; border: none; font-size: 1.6rem;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 200; }
+
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: flex-end; justify-content: center; }
+  .modal-backdrop.active { display: flex; }
+  .modal-sheet { background: #fff; width: 100%; max-width: 780px; max-height: 88vh; overflow-y: auto; border-radius: 1rem 1rem 0 0; padding: 1.1rem 1.1rem 1.5rem; }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; }
+  .modal-title { font-size: 1rem; font-weight: 600; }
+  .modal-close { background: none; border: none; font-size: 1.3rem; color: var(--text-hint); cursor: pointer; }
+
+  .form-group { margin-bottom: 0.85rem; }
+  .form-label { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 0.3rem; display: block; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 0.55rem 0.7rem; border: 0.5px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 0.88rem; font-family: var(--font); background: var(--surface-2); color: var(--text-primary);
+  }
+  .form-textarea { resize: vertical; min-height: 2.5rem; }
+  .form-row { display: flex; gap: 0.6rem; }
+  .form-row > * { flex: 1; }
+
+  .pill-group { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .pill { padding: 0.4rem 0.75rem; border-radius: 20px; border: 0.5px solid var(--border); background: var(--surface-2);
+    font-size: 0.78rem; cursor: pointer; color: var(--text-secondary); }
+  .pill.selected { background: var(--teal-light); color: #fff; border-color: var(--teal-light); }
+
+  .receipt-box { border: 1.5px dashed var(--border); border-radius: var(--radius); padding: 1rem; text-align: center; margin-bottom: 0.9rem; }
+  .receipt-preview { max-width: 100%; max-height: 12rem; border-radius: var(--radius-sm); margin-bottom: 0.6rem; }
+  .btn { padding: 0.55rem 1rem; border-radius: var(--radius-sm); border: none; font-size: 0.82rem; font-family: var(--font); cursor: pointer; }
+  .btn-outline { background: var(--surface-2); color: var(--text-primary); border: 0.5px solid var(--border); }
+  .btn-primary { background: var(--teal-mid); color: #fff; }
+  .btn-primary:disabled { opacity: 0.5; }
+  .btn-block { width: 100%; padding: 0.75rem; font-size: 0.9rem; font-weight: 600; border-radius: var(--radius); }
+
+  .toast { position: fixed; bottom: 6rem; left: 50%; transform: translateX(-50%); background: rgba(20,20,20,0.9);
+    color: #fff; padding: 0.55rem 1.1rem; border-radius: 20px; font-size: 0.8rem; z-index: 1000; display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="header-back" href="singapore_itinerary.html">← 行程表</a>
+  <div class="header-title">🧾 新加坡旅遊記帳</div>
+  <div class="header-sub">7/22–7/24 · 兩人同行</div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('stats')">📊 統計</button>
+  <button class="tab-btn" onclick="switchTab('list')">📋 明細</button>
+</div>
+
+<div class="content">
+
+  <div class="panel active" id="panel-stats">
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">整趟總花費</div>
+        <div class="stat-value" id="statTotal">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">人均（2人）</div>
+        <div class="stat-value" id="statPerPerson">—</div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">類別比例</div>
+      <div class="chart-box"><canvas id="categoryChart"></canvas></div>
+      <div id="categoryLegend"></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">幣別結構</div>
+      <div id="currencyBreakdown"></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">每日統計</div>
+      <div id="dailyBreakdown"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-list">
+    <div id="expenseList"></div>
+    <div class="empty-hint" id="emptyHint" style="display:none;">還沒有任何記錄，點右下角 ＋ 開始記帳</div>
+  </div>
+
+</div>
+
+<button class="fab" onclick="openAddModal()">＋</button>
+
+<div class="modal-backdrop" id="addModal" onclick="if(event.target===this) closeAddModal()">
+  <div class="modal-sheet">
+    <div class="modal-head">
+      <div class="modal-title">新增記帳</div>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+
+    <div class="receipt-box" id="receiptBox">
+      <div id="receiptPreviewWrap"></div>
+      <input type="file" id="receiptInput" accept="image/*" capture="environment" style="display:none;" onchange="onReceiptSelected(event)">
+      <button class="btn btn-outline" onclick="document.getElementById('receiptInput').click()">📸 上傳收據照片</button>
+      <button class="btn btn-primary" id="parseBtn" style="display:none;margin-left:0.5rem;" onclick="parseReceipt()">🔍 解析收據</button>
+      <div id="parseStatus" style="font-size:0.75rem;color:var(--text-hint);margin-top:0.5rem;"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">地點／店名</label>
+      <input class="form-input" id="fPlace" placeholder="例如：松發肉骨茶">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">說明</label>
+      <input class="form-input" id="fDescription" placeholder="例如：晚餐">
+    </div>
+
+    <div class="form-group form-row">
+      <div>
+        <label class="form-label">金額</label>
+        <input class="form-input" id="fAmount" type="number" inputmode="decimal" placeholder="0">
+      </div>
+      <div>
+        <label class="form-label">幣別</label>
+        <div class="pill-group" id="currencyPills">
+          <button type="button" class="pill selected" data-val="SGD" onclick="selectPill(this,'currency')">S$ SGD</button>
+          <button type="button" class="pill" data-val="USD" onclick="selectPill(this,'currency')">$ USD</button>
+          <button type="button" class="pill" data-val="TWD" onclick="selectPill(this,'currency')">NT$ TWD</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">類別</label>
+      <div class="pill-group" id="categoryPills">
+        <button type="button" class="pill selected" data-val="機票" onclick="selectPill(this,'category')">✈ 機票</button>
+        <button type="button" class="pill" data-val="住宿" onclick="selectPill(this,'category')">🏨 住宿</button>
+        <button type="button" class="pill" data-val="門票" onclick="selectPill(this,'category')">🎡 門票</button>
+        <button type="button" class="pill" data-val="交通" onclick="selectPill(this,'category')">🚗 交通</button>
+        <button type="button" class="pill" data-val="餐飲" onclick="selectPill(this,'category')">🍜 餐飲</button>
+        <button type="button" class="pill" data-val="保險/通訊" onclick="selectPill(this,'category')">🛡 保險/通訊</button>
+        <button type="button" class="pill" data-val="購物/雜支" onclick="selectPill(this,'category')">🛍 購物/雜支</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">日期</label>
+      <div class="pill-group" id="datePills">
+        <button type="button" class="pill selected" data-val="7/22（三)" onclick="selectPill(this,'date')">7/22（三）</button>
+        <button type="button" class="pill" data-val="7/23（四)" onclick="selectPill(this,'date')">7/23（四）</button>
+        <button type="button" class="pill" data-val="7/24（五)" onclick="selectPill(this,'date')">7/24（五）</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">品項明細（選填）</label>
+      <textarea class="form-textarea" id="fItems" placeholder="例如：咖椰吐司 x2、Iced Milk Tea x2"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">備註（選填）</label>
+      <textarea class="form-textarea" id="fNote"></textarea>
+    </div>
+
+    <button class="btn btn-primary btn-block" id="saveBtn" onclick="saveExpense()">💾 儲存記帳</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ⚠️ 部署完 GAS 後，把下面換成你實際的 exec 網址
+  const GAS_URL = 'https://script.google.com/macros/s/請換成你的部署ID/exec';
+  const TRIP = 'singapore';
+
+  const CATEGORY_COLORS = {
+    '機票': '#1D9E75', '住宿': '#EF9F27', '門票': '#378ADD', '交通': '#D85A30',
+    '餐飲': '#7F77DD', '保險/通訊': '#D4537E', '購物/雜支': '#888780'
+  };
+  const FX_RATE = { SGD: 24.8, USD: 32.1, TWD: 1 };
+  const CURRENCY_SYMBOL = { SGD: 'S$', USD: '$', TWD: 'NT$' };
+
+  let selected = { currency: 'SGD', category: '機票', date: '7/22（三)' };
+  let allRows = [];
+  let categoryChartInstance = null;
+
+  function switchTab(id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function selectPill(el, group) {
+    el.parentElement.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    selected[group] = el.dataset.val;
+  }
+
+  function openAddModal() { document.getElementById('addModal').classList.add('active'); }
+  function closeAddModal() {
+    document.getElementById('addModal').classList.remove('active');
+    resetForm();
+  }
+
+  function resetForm() {
+    document.getElementById('fPlace').value = '';
+    document.getElementById('fDescription').value = '';
+    document.getElementById('fAmount').value = '';
+    document.getElementById('fItems').value = '';
+    document.getElementById('fNote').value = '';
+    document.getElementById('receiptPreviewWrap').innerHTML = '';
+    document.getElementById('parseBtn').style.display = 'none';
+    document.getElementById('parseStatus').textContent = '';
+    document.getElementById('receiptInput').value = '';
+  }
+
+  let receiptBase64 = null;
+  let receiptMediaType = null;
+
+  function onReceiptSelected(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    receiptMediaType = file.type || 'image/jpeg';
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const dataUrl = e.target.result;
+      receiptBase64 = dataUrl.split(',')[1];
+      document.getElementById('receiptPreviewWrap').innerHTML =
+        '<img class="receipt-preview" src="' + dataUrl + '">';
+      document.getElementById('parseBtn').style.display = 'inline-block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function parseReceipt() {
+    if (!receiptBase64) return;
+    const statusEl = document.getElementById('parseStatus');
+    statusEl.textContent = '解析中，請稍候…';
+    try {
+      const res = await fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'parseReceipt', image: receiptBase64, mediaType: receiptMediaType })
+      });
+      const result = await res.json();
+      if (!result.success) {
+        statusEl.textContent = '解析失敗：' + (result.error || '未知錯誤');
+        return;
+      }
+      const d = result.data;
+      if (d.place) document.getElementById('fPlace').value = d.place;
+      if (d.description) document.getElementById('fDescription').value = d.description;
+      if (d.amount) document.getElementById('fAmount').value = d.amount;
+      if (d.items) document.getElementById('fItems').value = d.items;
+      if (d.currency) {
+        document.querySelectorAll('#currencyPills .pill').forEach(p => {
+          p.classList.toggle('selected', p.dataset.val === d.currency);
+        });
+        selected.currency = d.currency;
+      }
+      if (d.category) {
+        document.querySelectorAll('#categoryPills .pill').forEach(p => {
+          p.classList.toggle('selected', p.dataset.val === d.category);
+        });
+        selected.category = d.category;
+      }
+      statusEl.textContent = '✅ 解析完成，請確認欄位是否正確';
+    } catch (err) {
+      statusEl.textContent = '解析發生錯誤，請手動輸入';
+    }
+  }
+
+  async function saveExpense() {
+    const amount = parseFloat(document.getElementById('fAmount').value);
+    if (!amount || amount <= 0) {
+      showToast('請輸入正確的金額');
+      return;
+    }
+    const payload = {
+      action: 'saveExpense',
+      trip: TRIP,
+      date: selected.date,
+      place: document.getElementById('fPlace').value,
+      description: document.getElementById('fDescription').value,
+      amount: amount,
+      currency: selected.currency,
+      category: selected.category,
+      items: document.getElementById('fItems').value,
+      note: document.getElementById('fNote').value
+    };
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.disabled = true;
+    try {
+      const res = await fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+      if (result.success) {
+        showToast('已儲存！');
+        closeAddModal();
+        loadData();
+      } else {
+        showToast('儲存失敗：' + (result.error || ''));
+      }
+    } catch (err) {
+      showToast('連線失敗，請稍後再試');
+    }
+    saveBtn.disabled = false;
+  }
+
+  async function deleteExpense(row) {
+    if (!confirm('確定要刪除這筆記錄嗎？')) return;
+    try {
+      const res = await fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'deleteExpense', trip: TRIP, row: row })
+      });
+      const result = await res.json();
+      if (result.success) { showToast('已刪除'); loadData(); }
+      else showToast('刪除失敗');
+    } catch (err) { showToast('連線失敗'); }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 2200);
+  }
+
+  function twdOf(row) {
+    const amt = Number(row['金額']) || 0;
+    const cur = row['幣別'] || 'TWD';
+    return Math.round(amt * (FX_RATE[cur] || 1));
+  }
+
+  async function loadData() {
+    try {
+      const res = await fetch(GAS_URL + '?trip=' + TRIP);
+      const result = await res.json();
+      if (!result.success) { showToast('讀取失敗：' + result.error); return; }
+      allRows = result.rows || [];
+      renderStats();
+      renderList();
+    } catch (err) {
+      showToast('無法連線到記帳後端，請確認 GAS 網址設定');
+    }
+  }
+
+  function renderStats() {
+    const total = allRows.reduce((s, r) => s + twdOf(r), 0);
+    document.getElementById('statTotal').textContent = total ? 'NT$' + total.toLocaleString() : '—';
+    document.getElementById('statPerPerson').textContent = total ? 'NT$' + Math.round(total / 2).toLocaleString() : '—';
+
+    const catTotals = {};
+    allRows.forEach(r => {
+      const cat = r['類別'] || '購物/雜支';
+      catTotals[cat] = (catTotals[cat] || 0) + twdOf(r);
+    });
+    const catKeys = Object.keys(catTotals);
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    if (categoryChartInstance) categoryChartInstance.destroy();
+    if (catKeys.length) {
+      categoryChartInstance = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: catKeys,
+          datasets: [{ data: catKeys.map(k => catTotals[k]), backgroundColor: catKeys.map(k => CATEGORY_COLORS[k] || '#999'), borderColor: '#fff', borderWidth: 1.5 }]
+        },
+        options: { plugins: { legend: { display: false } } }
+      });
+    }
+    document.getElementById('categoryLegend').innerHTML = catKeys.map(k => {
+      const pct = total ? (catTotals[k] / total * 100).toFixed(1) : '0';
+      return '<div class="legend-row"><span class="legend-name"><span class="legend-dot" style="background:' + (CATEGORY_COLORS[k] || '#999') + '"></span>' + k + '</span><span>NT$' + catTotals[k].toLocaleString() + '（' + pct + '%）</span></div>';
+    }).join('') || '<div class="empty-hint">尚無資料</div>';
+
+    const curTotals = {};
+    allRows.forEach(r => {
+      const cur = r['幣別'] || 'TWD';
+      curTotals[cur] = (curTotals[cur] || 0) + (Number(r['金額']) || 0);
+    });
+    document.getElementById('currencyBreakdown').innerHTML = Object.keys(curTotals).map(cur =>
+      '<div class="legend-row"><span class="legend-name">' + (CURRENCY_SYMBOL[cur] || '') + ' ' + cur + '</span><span>' + curTotals[cur].toLocaleString() + '（≈NT$' + Math.round(curTotals[cur] * (FX_RATE[cur] || 1)).toLocaleString() + '）</span></div>'
+    ).join('') || '<div class="empty-hint">尚無資料</div>';
+
+    const dayTotals = {};
+    allRows.forEach(r => {
+      const day = r['日期'] || '未分類';
+      dayTotals[day] = (dayTotals[day] || 0) + twdOf(r);
+    });
+    document.getElementById('dailyBreakdown').innerHTML = Object.keys(dayTotals).map(day =>
+      '<div class="legend-row"><span class="legend-name">' + day + '</span><span>NT$' + dayTotals[day].toLocaleString() + '</span></div>'
+    ).join('') || '<div class="empty-hint">尚無資料</div>';
+  }
+
+  function renderList() {
+    const listEl = document.getElementById('expenseList');
+    const emptyEl = document.getElementById('emptyHint');
+    if (!allRows.length) {
+      listEl.innerHTML = '';
+      emptyEl.style.display = 'block';
+      return;
+    }
+    emptyEl.style.display = 'none';
+    listEl.innerHTML = allRows.slice().reverse().map(r => {
+      const cur = r['幣別'] || 'TWD';
+      return '<div class="expense-item">' +
+        '<div class="expense-top">' +
+          '<div><div class="expense-place">' + (r['地點/店名'] || r['地點／店名'] || '') + '</div>' +
+          '<div class="expense-desc">' + (r['說明'] || '') + '</div></div>' +
+          '<div class="expense-amt">' + (CURRENCY_SYMBOL[cur] || '') + (Number(r['金額'])||0).toLocaleString() + '</div>' +
+        '</div>' +
+        '<div class="expense-meta">' +
+          '<span class="chip">' + (r['日期'] || '') + '</span>' +
+          '<span class="chip">' + (r['類別'] || '') + '</span>' +
+        '</div>' +
+        (r['備註'] ? '<div class="expense-desc" style="margin-top:0.4rem;">📝 ' + r['備註'] + '</div>' : '') +
+        '<button class="expense-del" onclick="deleteExpense(' + r._row + ')">刪除</button>' +
+      '</div>';
+    }).join('');
+  }
+
+  loadData();
+</script>
+
+</body>
+</html>
