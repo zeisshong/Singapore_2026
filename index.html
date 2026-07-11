@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>新加坡三天兩夜旅遊行程</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -161,6 +162,16 @@
   .budget-total-label { font-size: 0.9rem; font-weight: 600; color: var(--teal-dark); }
   .budget-total-amt { font-size: clamp(1.1rem, 2.5vw, 1.4rem); font-weight: 700; color: var(--teal-mid); }
   .note { font-size: 0.7rem; text-align: center; color: var(--text-hint); padding: 0.5rem 0 0.25rem; }
+
+  /* Budget chart */
+  .chart-wrap { padding: 1rem 1rem 0.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+  .chart-canvas-box { width: 100%; max-width: 220px; }
+  .chart-legend { width: 100%; display: flex; flex-direction: column; gap: 0.4rem; padding-bottom: 0.75rem; }
+  .chart-legend-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; }
+  .chart-legend-name { display: flex; align-items: center; gap: 0.4rem; color: var(--text-secondary); }
+  .chart-legend-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; flex-shrink: 0; }
+  .chart-legend-val { font-weight: 600; color: var(--text-primary); }
+  .chart-legend-pct { color: var(--text-hint); font-size: 0.72rem; margin-left: 0.3rem; }
 
   /* Lock screen */
   .lock-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem 1rem; gap:1rem; }
@@ -615,6 +626,10 @@
         <div class="budget-head-title">💰 預算總覽</div>
         <div class="budget-head-sub">單人費用（新台幣）· 前 6 項為已確認實際支出，其餘為估算</div>
       </div>
+      <div class="chart-wrap">
+        <div class="chart-canvas-box"><canvas id="budgetPieChart"></canvas></div>
+        <div class="chart-legend" id="budgetLegend"></div>
+      </div>
       <div class="budget-row">
         <div class="budget-label">✈ 去程機票（2人＋1行李）</div>
         <div class="budget-amt">$3,622.33</div>
@@ -738,6 +753,63 @@ function switchTab(id) {
     document.getElementById('lock-screen').style.display = 'none';
     document.getElementById('private-content').style.display = 'block';
   }
+  if (id === 'budget' && !_budgetChartInitialized) {
+    initBudgetChart();
+    _budgetChartInitialized = true;
+  }
+}
+
+var _budgetChartInitialized = false;
+
+function initBudgetChart() {
+  var categories = [
+    { label: '✈ 機票', value: 6955.26, color: '#1D9E75' },
+    { label: '🏨 住宿', value: 6020.16, color: '#EF9F27' },
+    { label: '🎡 樂園門票', value: 2014.00, color: '#378ADD' },
+    { label: '🚗 市內交通', value: 1332.5, color: '#D85A30' },
+    { label: '🍜 餐飲', value: 1600, color: '#7F77DD' },
+    { label: '🛡📱 保險/通訊', value: 1838, color: '#D4537E' },
+    { label: '🛍 購物/雜支', value: 1600, color: '#888780' }
+  ];
+  var total = categories.reduce(function(sum, c) { return sum + c.value; }, 0);
+
+  var ctx = document.getElementById('budgetPieChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: categories.map(function(c) { return c.label; }),
+      datasets: [{
+        data: categories.map(function(c) { return c.value; }),
+        backgroundColor: categories.map(function(c) { return c.color; }),
+        borderColor: '#fff',
+        borderWidth: 1.5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(item) {
+              var pct = (item.raw / total * 100).toFixed(1);
+              return item.label + '：NT$' + item.raw.toLocaleString() + '（' + pct + '%）';
+            }
+          }
+        }
+      }
+    }
+  });
+
+  var legendHtml = categories.map(function(c) {
+    var pct = (c.value / total * 100).toFixed(1);
+    return '<div class="chart-legend-row">' +
+      '<span class="chart-legend-name"><span class="chart-legend-dot" style="background:' + c.color + '"></span>' + c.label + '</span>' +
+      '<span><span class="chart-legend-val">NT$' + c.value.toLocaleString() + '</span><span class="chart-legend-pct">' + pct + '%</span></span>' +
+      '</div>';
+  }).join('');
+  document.getElementById('budgetLegend').innerHTML = legendHtml;
 }
 
 async function unlock() {
