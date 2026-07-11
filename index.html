@@ -9,7 +9,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   /* 動態字體基準：手機 15px，桌機隨 viewport 平滑放大，上限 18px */
-  html { font-size: clamp(15px, 2.2vw, 18px); }
+  html { font-size: clamp(16.5px, 2.4vw, 19px); }
 
   :root {
     --teal-dark: #085041; --teal-mid: #0F6E56; --teal-light: #1D9E75; --teal-pale: #E1F5EE; --teal-border: #5DCAA5;
@@ -22,22 +22,21 @@
     --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
   }
   html, body { height: 100%; font-family: var(--font); background: #f5f4f0; color: var(--text-primary); }
-  /* 寬度不設上限，讓頁面自然撐滿 viewport */
-  body { display: flex; flex-direction: column; max-width: 780px; margin: 0 auto; min-height: 100vh; }
+  /* 寬度不設上限，讓頁面自然撐滿 viewport；整頁採自然文件流捲動，不做內層獨立捲動容器 */
+  body { max-width: 780px; margin: 0 auto; }
 
   /* Hero */
   .hero {
     background: linear-gradient(150deg, #0F6E56 0%, #085041 45%, #185FA5 100%);
-    padding: 1.5rem 1.5rem 1.25rem; color: #fff; position: relative; overflow: hidden; flex-shrink: 0;
+    padding: 0.95rem 1.25rem 0.85rem; color: #fff; position: relative; overflow: hidden; flex-shrink: 0;
   }
   .hero::after {
     content: '✈'; position: absolute; right: 1.25rem; top: 0.25rem;
     font-size: 5rem; opacity: 0.08; pointer-events: none;
   }
-  .hero-eyebrow { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; margin-bottom: 0.3rem; }
-  .hero-title { font-size: clamp(1.2rem, 3vw, 1.6rem); font-weight: 600; line-height: 1.25; margin-bottom: 0.3rem; }
-  .hero-sub { font-size: 0.8rem; opacity: 0.8; }
-  .hero-chips { display: flex; gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap; }
+  .hero-eyebrow { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; margin-bottom: 0.25rem; }
+  .hero-title { font-size: clamp(1.15rem, 2.8vw, 1.5rem); font-weight: 600; line-height: 1.22; margin-bottom: 0; }
+  .hero-chips { display: flex; gap: 0.4rem; margin-top: 0.6rem; flex-wrap: wrap; }
   .chip { background: rgba(255,255,255,0.18); border: 0.5px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 0.15rem 0.6rem; font-size: 0.72rem; }
 
   /* Tab bar */
@@ -67,7 +66,7 @@
   .tab-sub { font-size: 0.65rem; opacity: 0.7; }
 
   /* Tab panels */
-  .tab-content { flex: 1; overflow-y: auto; padding: 0.875rem; }
+  .tab-content { padding: 0.875rem; }
   .panel { display: none; }
   .panel.active { display: block; }
 
@@ -183,6 +182,14 @@
   .mrt-modal img { max-width:100%; max-height:100%; touch-action:pinch-zoom; border-radius:4px; }
   .mrt-modal-close { position:fixed; top:1rem; right:1rem; width:2.4rem; height:2.4rem; border-radius:50%; background:rgba(255,255,255,0.15); color:#fff; border:none; font-size:1.2rem; z-index:10000; line-height:1; }
 
+  /* Expense FAB */
+  .expense-fab {
+    position: fixed; right: 1.1rem; bottom: 1.3rem; width: 3.2rem; height: 3.2rem; border-radius: 50%;
+    background: linear-gradient(135deg, #0F6E56, #185FA5); color: #fff; display: flex; align-items: center;
+    justify-content: center; font-size: 1.4rem; text-decoration: none; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    z-index: 500;
+  }
+
   /* Lock screen */
   .lock-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem 1rem; gap:1rem; }
   .lock-icon { font-size:2.5rem; }
@@ -226,7 +233,6 @@
 <div class="hero">
   <div class="hero-eyebrow">新加坡三天兩夜</div>
   <div class="hero-title">城市灣景 × 環球探索<br>南洋美食之旅</div>
-  <div class="hero-sub">酷航直飛 · 2025 夏季</div>
   <div class="hero-chips">
     <span class="chip">7/22–7/24</span>
     <span class="chip">兩人同行</span>
@@ -773,7 +779,7 @@ function switchTab(id) {
   var map = { d1: 0, d2: 1, d3: 2, budget: 3, map: 4, private: 5 };
   document.querySelectorAll('.tab-btn')[map[id]].classList.add('active');
   document.getElementById('panel-' + id).classList.add('active');
-  document.querySelector('.tab-content').scrollTop = 0;
+  document.querySelector('.tab-bar').scrollIntoView({ block: 'start', behavior: 'instant' });
   if (id === 'private' && _unlocked) {
     document.getElementById('lock-screen').style.display = 'none';
     document.getElementById('private-content').style.display = 'block';
@@ -868,5 +874,6 @@ async function unlock() {
   }
 }
 </script>
+<a class="expense-fab" href="singapore_expense.html" title="旅遊記帳">🧾</a>
 </body>
 </html>
