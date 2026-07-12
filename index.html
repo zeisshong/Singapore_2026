@@ -25,24 +25,29 @@
   /* 寬度不設上限，讓頁面自然撐滿 viewport；整頁採自然文件流捲動，不做內層獨立捲動容器 */
   body { max-width: 780px; margin: 0 auto; }
 
+  /* 合併置頂列：Hero + TabBar 一起黏在頂部 */
+  .sticky-top {
+    position: sticky; top: 0; z-index: 100;
+  }
+
   /* Hero */
   .hero {
     background: linear-gradient(150deg, #0F6E56 0%, #085041 45%, #185FA5 100%);
-    padding: 0.95rem 1.25rem 0.85rem; color: #fff; position: relative; overflow: hidden; flex-shrink: 0;
+    padding: 0.55rem 1.1rem 0.5rem; color: #fff; position: relative; overflow: hidden; flex-shrink: 0;
   }
   .hero::after {
-    content: '✈'; position: absolute; right: 1.25rem; top: 0.25rem;
-    font-size: 5rem; opacity: 0.08; pointer-events: none;
+    content: '✈'; position: absolute; right: 1.25rem; top: 0.2rem;
+    font-size: 3.2rem; opacity: 0.08; pointer-events: none;
   }
-  .hero-eyebrow { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; margin-bottom: 0.25rem; }
-  .hero-title { font-size: clamp(1.15rem, 2.8vw, 1.5rem); font-weight: 600; line-height: 1.22; margin-bottom: 0; }
-  .hero-chips { display: flex; gap: 0.4rem; margin-top: 0.6rem; flex-wrap: wrap; }
-  .chip { background: rgba(255,255,255,0.18); border: 0.5px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 0.15rem 0.6rem; font-size: 0.72rem; }
+  .hero-eyebrow { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; margin-bottom: 0.15rem; }
+  .hero-title { font-size: clamp(0.95rem, 2.2vw, 1.15rem); font-weight: 600; line-height: 1.2; margin-bottom: 0; }
+  .hero-chips { display: flex; gap: 0.35rem; margin-top: 0.4rem; flex-wrap: wrap; }
+  .chip { background: rgba(255,255,255,0.18); border: 0.5px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 0.1rem 0.55rem; font-size: 0.65rem; }
 
   /* Tab bar */
   .tab-bar {
     display: flex; background: var(--surface); border-bottom: 0.5px solid var(--border);
-    position: sticky; top: 0; z-index: 100; flex-shrink: 0;
+    flex-shrink: 0;
   }
   .tab-btn {
     flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0.6rem 0.25rem 0.5rem;
@@ -230,13 +235,13 @@
 </head>
 <body>
 
+<div class="sticky-top">
 <div class="hero">
   <div class="hero-eyebrow">新加坡三天兩夜</div>
-  <div class="hero-title">城市灣景 × 環球探索<br>南洋美食之旅</div>
+  <div class="hero-title">城市灣景 × 環球探索 · 南洋美食之旅</div>
   <div class="hero-chips">
     <span class="chip">7/22–7/24</span>
     <span class="chip">兩人同行</span>
-    <span class="chip">預估 $19,867–$21,367 / 人</span>
   </div>
 </div>
 
@@ -271,6 +276,7 @@
     <div class="tab-label">旅遊資訊</div>
     <div class="tab-sub">🔒 加密</div>
   </button>
+</div>
 </div>
 
 <div class="tab-content">
