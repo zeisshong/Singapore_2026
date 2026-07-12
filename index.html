@@ -172,7 +172,7 @@
   .chart-wrap { padding: 1rem 1rem 0.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
   .chart-canvas-box { width: 100%; max-width: 220px; }
   .chart-legend { width: 100%; display: flex; flex-direction: column; gap: 0.4rem; padding-bottom: 0.75rem; }
-  .chart-legend-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; }
+  .chart-legend-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.2rem; font-size: 0.78rem; }
   .chart-legend-name { display: flex; align-items: center; gap: 0.4rem; color: var(--text-secondary); }
   .chart-legend-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; flex-shrink: 0; }
   .chart-legend-val { font-weight: 600; color: var(--text-primary); }
@@ -232,6 +232,17 @@
   .map-link { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.72rem; color: var(--teal-mid); text-decoration: none; font-weight: 500; margin-top: 0.35rem; }
   .map-link:hover { text-decoration: underline; }
   .map-link::before { content: '📍'; font-size: 0.7rem; }
+
+  /* Copy chip：可一鍵複製的英文地名/訂單編號，方便貼進 Grab 等 App */
+  .copy-chip {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    background: var(--surface-2); border: 0.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0.2rem 0.55rem; margin-top: 0.35rem; margin-left: 0.4rem;
+    font-family: monospace; font-size: 0.78rem; color: var(--text-primary);
+    cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none;
+  }
+  .copy-chip:active { background: var(--teal-pale); }
+  .copy-chip .copy-icon { font-size: 0.72rem; }
 </style>
 </head>
 <body>
@@ -484,8 +495,9 @@
           <div class="tags"><span class="tag trans">Grab ×2 趟</span><span class="tag stay">入住飯店</span></div>
           <div class="cost">Grab · MBS→機場：<span class="cost-val">S$15–18 / NT$375–450</span></div>
           <div class="cost">Grab · 機場→D'Resort：<span class="cost-val">S$12–15 / NT$300–375</span></div>
-          <div class="cost">Agoda 訂單：<span class="cost-val mono">1745143444</span></div>
+          <div class="cost">Agoda 訂單：<span class="copy-chip" data-copy="1745143444" onclick="copyText(this)"><span class="copy-icon">📋</span>1745143444</span></div>
           <a class="map-link" href="https://maps.app.goo.gl/W7oFgAN4jHGZHvFY8">D'Resort @ Downtown East</a>
+          <span class="copy-chip" data-copy="D'Resort @ Downtown East" onclick="copyText(this)"><span class="copy-icon">📋</span>複製飯店名稱</span>
         </div>
       </div>
 
@@ -517,6 +529,7 @@
           <div class="tags"><span class="tag trans">Grab 叫車直達</span></div>
           <div class="cost">Grab（兩人均攤）：<span class="cost-val">$600–$800 TWD</span></div>
           <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=D%27Resort+%40+Downtown+East,+Singapore&destination=Resorts+World+Sentosa,+Singapore&travelmode=driving">導航：D'Resort → 聖淘沙（Grab）</a>
+          <span class="copy-chip" data-copy="Resorts World Sentosa, Singapore" onclick="copyText(this)"><span class="copy-icon">📋</span>複製目的地</span>
         </div>
       </div>
 
@@ -587,6 +600,7 @@
           <div class="tags"><span class="tag trans">Grab（5–10 分）</span><span class="tag stay">返回飯店</span></div>
           <div class="cost">Grab（兩人均攤）：<span class="cost-val">約 S$8–10 / NT$200–250</span></div>
           <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Tampines+MRT+Station,+Singapore&destination=D%27Resort+%40+Downtown+East,+Singapore&travelmode=driving">導航：淡濱尼站 → D'Resort（Grab）</a>
+          <span class="copy-chip" data-copy="D'Resort @ Downtown East" onclick="copyText(this)"><span class="copy-icon">📋</span>複製目的地</span>
         </div>
       </div>
 
@@ -618,6 +632,7 @@
           <div class="tags"><span class="tag trans">Grab / CDG Zig（15 分）</span></div>
           <div class="cost">Grab（兩人均攤）：<span class="cost-val">$300–$400 TWD</span></div>
           <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=D%27Resort+%40+Downtown+East,+Singapore&destination=Changi+Airport+Terminal+1,+Singapore&travelmode=driving">導航：D'Resort → 機場（Grab）</a>
+          <span class="copy-chip" data-copy="Changi Airport Terminal 1, Singapore" onclick="copyText(this)"><span class="copy-icon">📋</span>複製目的地</span>
         </div>
       </div>
 
@@ -780,6 +795,23 @@
 <script>
 var ENCRYPTED = "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";
 var _unlocked = false;
+
+function copyText(el) {
+  var text = el.getAttribute('data-copy');
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(function() {
+    var icon = el.querySelector('.copy-icon');
+    var original = icon.textContent;
+    icon.textContent = '✓';
+    el.style.background = '#E1F5EE';
+    setTimeout(function() {
+      icon.textContent = original;
+      el.style.background = '';
+    }, 1200);
+  }).catch(function() {
+    // 部分瀏覽器情境下 clipboard API 可能被拒絕，靜默失敗即可
+  });
+}
 
 function updateStickyHeight() {
   var el = document.querySelector('.sticky-top');
