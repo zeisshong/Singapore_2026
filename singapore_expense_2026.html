@@ -21,15 +21,19 @@
   html, body { font-family: var(--font); background: #f5f4f0; color: var(--text-primary); }
   body { max-width: 780px; margin: 0 auto; padding-bottom: 5rem; }
 
+  /* 合併置頂列：Header + Tabs 一起黏在頂部 */
+  .sticky-top { position: sticky; top: 0; z-index: 50; }
+
   .header {
     background: linear-gradient(150deg, #0F6E56 0%, #085041 45%, #185FA5 100%);
-    color: #fff; padding: 0.9rem 1.25rem 1rem;
+    color: #fff; padding: 0.5rem 1.1rem 0.45rem;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem;
   }
-  .header-back { font-size: 0.78rem; opacity: 0.85; text-decoration: none; color: #fff; }
-  .header-title { font-size: clamp(1.1rem, 2.6vw, 1.4rem); font-weight: 600; margin-top: 0.3rem; }
-  .header-sub { font-size: 0.75rem; opacity: 0.8; margin-top: 0.15rem; }
+  .header-back { font-size: 0.68rem; opacity: 0.85; text-decoration: none; color: #fff; flex-shrink: 0; }
+  .header-title { font-size: clamp(0.85rem, 2vw, 1rem); font-weight: 600; }
+  .header-sub { display: none; }
 
-  .tabs { display: flex; background: var(--surface); border-bottom: 0.5px solid var(--border); position: sticky; top: 0; z-index: 50; }
+  .tabs { display: flex; background: var(--surface); border-bottom: 0.5px solid var(--border); }
   .tab-btn { flex: 1; padding: 0.7rem 0; text-align: center; border: none; background: none; font-family: var(--font); font-size: 0.85rem; font-weight: 500; color: var(--text-hint); cursor: pointer; position: relative; }
   .tab-btn.active { color: var(--text-primary); }
   .tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2.5px; background: var(--teal-light); border-radius: 2px; }
@@ -102,15 +106,16 @@
 </head>
 <body>
 
+<div class="sticky-top">
 <div class="header">
   <a class="header-back" href="index.html">← 行程表</a>
   <div class="header-title">🧾 新加坡旅遊記帳</div>
-  <div class="header-sub">7/22–7/24 · 兩人同行</div>
 </div>
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('stats')">📊 統計</button>
   <button class="tab-btn" onclick="switchTab('list')">📋 明細</button>
+</div>
 </div>
 
 <div class="content">
