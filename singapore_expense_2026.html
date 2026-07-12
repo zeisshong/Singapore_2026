@@ -22,7 +22,7 @@
   body { max-width: 780px; margin: 0 auto; padding-bottom: 5rem; }
 
   /* 合併置頂列：Header + Tabs 一起黏在頂部 */
-  .sticky-top { position: sticky; top: 0; z-index: 50; }
+  .sticky-top { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 780px; z-index: 50; }
 
   .header {
     background: linear-gradient(150deg, #0F6E56 0%, #085041 45%, #185FA5 100%);
@@ -38,7 +38,7 @@
   .tab-btn.active { color: var(--text-primary); }
   .tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2.5px; background: var(--teal-light); border-radius: 2px; }
 
-  .content { padding: 1rem; }
+  .content { padding: 1rem; padding-top: calc(1rem + var(--sticky-h, 88px)); }
   .panel { display: none; }
   .panel.active { display: block; }
 
@@ -249,6 +249,14 @@
   const CURRENCY_SYMBOL = { SGD: 'S$', USD: '$', TWD: 'NT$' };
 
   let selected = { currency: 'SGD', category: '機票', date: '7/22（三)' };
+
+  function updateStickyHeight() {
+    const el = document.querySelector('.sticky-top');
+    if (el) document.documentElement.style.setProperty('--sticky-h', el.offsetHeight + 'px');
+  }
+  window.addEventListener('load', updateStickyHeight);
+  window.addEventListener('resize', updateStickyHeight);
+  updateStickyHeight();
   let allRows = [];
   let categoryChartInstance = null;
 
