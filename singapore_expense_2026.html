@@ -8,23 +8,23 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { font-size: clamp(16.5px, 2.4vw, 19px); }
   :root {
-    --teal-dark: #085041; --teal-mid: #0F6E56; --teal-light: #1D9E75; --teal-pale: #E1F5EE; --teal-border: #5DCAA5;
-    --amber-dark: #633806; --amber-mid: #854F0B; --amber-light: #EF9F27; --amber-pale: #FAEEDA; --amber-border: #FAC775;
-    --blue-dark: #0C447C; --blue-mid: #185FA5; --blue-light: #378ADD; --blue-pale: #E6F1FB; --blue-border: #85B7EB;
-    --coral: #D85A30; --purple: #7F77DD; --pink: #D4537E; --gray: #888780;
+    --teal-dark: #3F5A70; --teal-mid: #7A9BAE; --teal-light: #A8C0CE; --teal-pale: #EAF1F4; --teal-border: #B7CBD6;
+    --amber-dark: #8A6234; --amber-mid: #E0A85F; --amber-light: #EEC98C; --amber-pale: #FBF1E1; --amber-border: #F0D3A0;
+    --blue-dark: #8A4530; --blue-mid: #E17A4C; --blue-light: #ED9F7B; --blue-pale: #FBE6DD; --blue-border: #F0BBA3;
+    --coral: #C1633E; --purple: #7A5245; --pink: #C97C74; --gray: #8C8479;
     --text-primary: #1a1a1a; --text-secondary: #666; --text-hint: #999;
     --surface: #fff; --surface-2: #f7f7f5; --border: rgba(0,0,0,0.08);
     --radius: 0.625rem; --radius-sm: 0.375rem;
     --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
   }
-  html, body { font-family: var(--font); background: #f5f4f0; color: var(--text-primary); }
+  html, body { font-family: var(--font); background: #FBF7F0; color: var(--text-primary); }
   body { max-width: 780px; margin: 0 auto; padding-bottom: 5rem; }
 
   /* 合併置頂列：Header + Tabs 一起黏在頂部 */
   .sticky-top { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 780px; z-index: 50; }
 
   .header {
-    background: linear-gradient(150deg, #0F6E56 0%, #085041 45%, #185FA5 100%);
+    background: linear-gradient(150deg, #7A9BAE 0%, #E0A85F 50%, #E17A4C 100%);
     color: #fff; padding: 0.5rem 1.1rem 0.45rem;
     display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem;
   }
@@ -285,8 +285,8 @@
   const TRIP = 'singapore';
 
   const CATEGORY_COLORS = {
-    '機票': '#1D9E75', '住宿': '#EF9F27', '門票': '#378ADD', '交通': '#D85A30',
-    '餐飲': '#7F77DD', '保險/通訊': '#D4537E', '購物/雜支': '#888780'
+    '機票': '#7A9BAE', '住宿': '#E0A85F', '門票': '#E17A4C', '交通': '#C1633E',
+    '餐飲': '#7A5245', '保險/通訊': '#C97C74', '購物/雜支': '#8C8479'
   };
   const FX_RATE = { SGD: 24.8, USD: 32.1, TWD: 1 };
   const CURRENCY_SYMBOL = { SGD: 'S$', USD: '$', TWD: 'NT$' };
