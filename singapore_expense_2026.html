@@ -160,6 +160,8 @@
 
 <div class="content">
 
+  <div id="loadStatus" style="display:none;font-size:0.72rem;color:var(--text-hint);margin-bottom:0.5rem;">更新資料中…</div>
+
   <div class="panel active" id="panel-stats">
     <div class="stat-grid">
       <div class="stat-card">
@@ -428,7 +430,7 @@
       if (result.success) {
         showToast('已儲存！');
         closeAddModal();
-        loadData();
+        loadData(true);
       } else {
         showToast('儲存失敗：' + (result.error || ''));
       }
@@ -447,7 +449,7 @@
         body: JSON.stringify({ action: 'deleteExpense', trip: TRIP, row: row })
       });
       const result = await res.json();
-      if (result.success) { showToast('已刪除'); loadData(); }
+      if (result.success) { showToast('已刪除'); loadData(true); }
       else showToast('刪除失敗');
     } catch (err) { showToast('連線失敗'); }
   }
@@ -465,17 +467,56 @@
     return Math.round(amt * (FX_RATE[cur] || 1));
   }
 
-  async function loadData() {
+  const LOCAL_CACHE_KEY = 'expenseCache_' + TRIP;
+
+  function readLocalCache() {
+    try {
+      const raw = localStorage.getItem(LOCAL_CACHE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (err) { return null; }
+  }
+
+  function writeLocalCache(rows) {
+    try {
+      localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify({ rows: rows, savedAt: Date.now() }));
+    } catch (err) { /* 容量不足或無痕模式時忽略即可 */ }
+  }
+
+  function showLoadingState(isLoading) {
+    const el = document.getElementById('loadStatus');
+    if (el) el.style.display = isLoading ? 'block' : 'none';
+  }
+
+  // forceFresh = true：存檔/刪除後呼叫，一律等待網路回應，不先顯示本地快取，避免看到存檔前的舊資料
+  // forceFresh = false（預設）：一般開啟頁面，先顯示本地快取讓畫面秒開，背景再換成最新資料
+  async function loadData(forceFresh) {
+    if (!forceFresh) {
+      const cached = readLocalCache();
+      if (cached && cached.rows) {
+        allRows = cached.rows;
+        renderStats();
+        renderList();
+      } else {
+        showLoadingState(true);
+      }
+    } else {
+      showLoadingState(true);
+    }
+
     try {
       const res = await fetch(GAS_URL + '?trip=' + TRIP);
       const result = await res.json();
-      if (!result.success) { showToast('讀取失敗：' + result.error); return; }
+      if (!result.success) { showToast('讀取失敗：' + result.error); showLoadingState(false); return; }
       allRows = result.rows || [];
+      writeLocalCache(allRows);
       renderStats();
       renderList();
     } catch (err) {
-      showToast('無法連線到記帳後端，請確認 GAS 網址設定');
+      if (!(readLocalCache() && !forceFresh)) {
+        showToast('無法連線到記帳後端，請確認 GAS 網址設定');
+      }
     }
+    showLoadingState(false);
   }
 
   const CATEGORY_ICONS = {
