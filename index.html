@@ -12,16 +12,16 @@
   html { font-size: clamp(16.5px, 2.4vw, 19px); }
 
   :root {
-    --teal-dark: #085041; --teal-mid: #0F6E56; --teal-light: #1D9E75; --teal-pale: #E1F5EE; --teal-border: #5DCAA5;
-    --amber-dark: #633806; --amber-mid: #854F0B; --amber-light: #EF9F27; --amber-pale: #FAEEDA; --amber-border: #FAC775;
-    --blue-dark: #0C447C; --blue-mid: #185FA5; --blue-light: #378ADD; --blue-pale: #E6F1FB; --blue-border: #85B7EB;
-    --coral: #D85A30; --purple: #7F77DD; --pink: #D4537E; --gray: #888780;
+    --teal-dark: #3F5A70; --teal-mid: #7A9BAE; --teal-light: #A8C0CE; --teal-pale: #EAF1F4; --teal-border: #B7CBD6;
+    --amber-dark: #8A6234; --amber-mid: #E0A85F; --amber-light: #EEC98C; --amber-pale: #FBF1E1; --amber-border: #F0D3A0;
+    --blue-dark: #8A4530; --blue-mid: #E17A4C; --blue-light: #ED9F7B; --blue-pale: #FBE6DD; --blue-border: #F0BBA3;
+    --coral: #C1633E; --purple: #7A5245; --pink: #C97C74; --gray: #8C8479;
     --text-primary: #1a1a1a; --text-secondary: #666; --text-hint: #999;
     --surface: #fff; --surface-2: #f7f7f5; --border: rgba(0,0,0,0.08);
     --radius: 0.625rem; --radius-sm: 0.375rem;
     --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
   }
-  html, body { height: 100%; font-family: var(--font); background: #f5f4f0; color: var(--text-primary); }
+  html, body { height: 100%; font-family: var(--font); background: #FBF7F0; color: var(--text-primary); }
   /* 寬度不設上限，讓頁面自然撐滿 viewport；整頁採自然文件流捲動，不做內層獨立捲動容器 */
   body { max-width: 780px; margin: 0 auto; }
 
@@ -33,7 +33,7 @@
 
   /* Hero */
   .hero {
-    background: linear-gradient(150deg, #0F6E56 0%, #085041 45%, #185FA5 100%);
+    background: linear-gradient(150deg, #7A9BAE 0%, #E0A85F 50%, #E17A4C 100%);
     padding: 0.55rem 1.1rem 0.5rem; color: #fff; position: relative; overflow: hidden; flex-shrink: 0;
   }
   .hero::after {
@@ -134,14 +134,14 @@
   .card-desc-list li:last-child { margin-bottom: 0; }
   .tags { display: flex; flex-wrap: wrap; gap: 0.2rem; margin-bottom: 0.4rem; }
   .tag { font-size: 0.68rem; padding: 0.15rem 0.45rem; border-radius: 12px; font-weight: 500; white-space: nowrap; }
-  .tag.eat   { background: #FAECE7; color: #993C1D; }
+  .tag.eat   { background: #F5E6DC; color: #8A4A2E; }
   .tag.sight { background: var(--teal-pale); color: var(--teal-dark); }
-  .tag.trans { background: #F1EFE8; color: #444; }
+  .tag.trans { background: #F0ECE6; color: #6B6155; }
   .tag.stay  { background: var(--blue-pale); color: var(--blue-dark); }
   .tag.shop  { background: var(--amber-pale); color: var(--amber-dark); }
-  .tag.show  { background: #FBEAF0; color: #72243E; }
-  .tag.land  { background: #EEEDFE; color: #3C3489; }
-  .tag.free  { background: #EAF3DE; color: #27500A; }
+  .tag.show  { background: #F7E5E1; color: #8A4F45; }
+  .tag.land  { background: #EDE3DE; color: #6B4438; }
+  .tag.free  { background: #EEF0E2; color: #55622F; }
   .cost { font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.25rem; }
   .cost-val { font-weight: 600; color: var(--text-primary); }
   .tip {
@@ -854,19 +854,19 @@ function closeMrtModal() {
 
 function initBudgetChart() {
   var categories = [
-    { label: '✈ 機票', value: 6955.26, color: '#1D9E75' },
-    { label: '🏨 住宿', value: 6020.16, color: '#EF9F27' },
-    { label: '🎡 樂園門票', value: 2014.00, color: '#378ADD' },
-    { label: '🚗 市內交通', value: 1332.5, color: '#D85A30' },
-    { label: '🍜 餐飲', value: 1600, color: '#7F77DD' },
-    { label: '🛡📱 保險/通訊', value: 1838, color: '#D4537E' },
-    { label: '🛍 購物/雜支', value: 1600, color: '#888780' }
+    { label: '✈ 機票', value: 6955.26, color: '#7A9BAE' },
+    { label: '🏨 住宿', value: 6020.16, color: '#E0A85F' },
+    { label: '🎡 樂園門票', value: 2014.00, color: '#E17A4C' },
+    { label: '🚗 市內交通', value: 1332.5, color: '#C1633E' },
+    { label: '🍜 餐飲', value: 1600, color: '#7A5245' },
+    { label: '🛡📱 保險/通訊', value: 1838, color: '#C97C74' },
+    { label: '🛍 購物/雜支', value: 1600, color: '#8C8479' }
   ];
   var total = categories.reduce(function(sum, c) { return sum + c.value; }, 0);
 
   var ctx = document.getElementById('budgetPieChart').getContext('2d');
   new Chart(ctx, {
-    type: 'pie',
+    type: 'doughnut',
     data: {
       labels: categories.map(function(c) { return c.label; }),
       datasets: [{
@@ -879,6 +879,7 @@ function initBudgetChart() {
     options: {
       responsive: true,
       maintainAspectRatio: true,
+      cutout: '58%',
       plugins: {
         legend: { display: false },
         tooltip: {
