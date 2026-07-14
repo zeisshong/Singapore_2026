@@ -473,8 +473,29 @@
     '機票': '✈', '住宿': '🏨', '門票': '🎡', '交通': '🚗',
     '餐飲': '🍜', '保險/通訊': '🛡', '購物/雜支': '🛍'
   };
-  const DAY_ORDER = ['7/22（三)', '7/23（四)', '7/24（五)'];
-  const DAY_LABELS = { '7/22（三)': 'Day 1', '7/23（四)': 'Day 2', '7/24（五)': 'Day 3' };
+  // 標準日期 key（不含星期文字），用來把 Sheet 回傳的各種日期格式歸到同一天
+  const DAY_META = {
+    '7/22': { label: 'Day 1', full: '7/22（三)' },
+    '7/23': { label: 'Day 2', full: '7/23（四)' },
+    '7/24': { label: 'Day 3', full: '7/24（五)' }
+  };
+  const DAY_ORDER = Object.keys(DAY_META);
+
+  // 防呆：Google Sheet 常把看起來像日期的字串自動轉成 Date，讀回來可能變成
+  // "2026/7/22"、"2026-07-22"、ISO 字串、或原本存進去的 "7/22（三)"，這裡統一轉成 "7/22" 這種 key
+  function normalizeDayKey(raw) {
+    if (!raw) return '';
+    const s = String(raw).trim();
+    let m = s.match(/^(\d{4})-(\d{2})-(\d{2})T/);          // ISO 帶時間
+    if (m) return parseInt(m[2]) + '/' + parseInt(m[3]);
+    m = s.match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})/); // 2026/7/22、2026-07-22
+    if (m) return parseInt(m[2]) + '/' + parseInt(m[3]);
+    m = s.match(/^(\d{1,2})\/(\d{1,2})/);                    // 7/22、7/22（三)
+    if (m) return parseInt(m[1]) + '/' + parseInt(m[2]);
+    return s;
+  }
+  function dayFullLabel(key) { return (DAY_META[key] && DAY_META[key].full) || key; }
+  function dayBadge(key) { return (DAY_META[key] && DAY_META[key].label) || '—'; }
 
   function renderStats() {
     const total = allRows.reduce((s, r) => s + twdOf(r), 0);
@@ -538,8 +559,8 @@
     const cur = maxRec['幣別'] || 'TWD';
     const symbol = CURRENCY_SYMBOL[cur] || '';
 
-    const dayTotals = DAY_ORDER.map(day => ({
-      day, total: valid.filter(r => (r['日期'] || '') === day).reduce((s, r) => s + twdOf(r), 0)
+    const dayTotals = DAY_ORDER.map(key => ({
+      key, total: valid.filter(r => normalizeDayKey(r['日期']) === key).reduce((s, r) => s + twdOf(r), 0)
     }));
     const maxDay = dayTotals.reduce((a, b) => b.total > a.total ? b : a);
 
@@ -553,7 +574,7 @@
       '</div>' +
       '<div class="highlight-row">' +
         '<div><div class="highlight-label">最花錢的一天</div>' +
-        '<div class="highlight-main">' + maxDay.day + '</div></div>' +
+        '<div class="highlight-main">' + dayFullLabel(maxDay.key) + '</div></div>' +
         '<div class="highlight-amt">NT$' + Math.round(maxDay.total).toLocaleString() + '</div>' +
       '</div>';
   }
@@ -562,14 +583,14 @@
   function renderDayAccordions(rows) {
     const container = document.getElementById('dailyBreakdown');
     container.innerHTML = '';
-    const days = DAY_ORDER.slice();
-    // 若資料裡出現不在既定日期清單的日期，補到最後
-    rows.forEach(r => { const d = r['日期'] || '未分類'; if (!days.includes(d)) days.push(d); });
+    const keys = DAY_ORDER.slice();
+    // 若資料裡出現不在既定日期清單的 key（例如行程外的日期），補到最後
+    rows.forEach(r => { const k = normalizeDayKey(r['日期']) || '未分類'; if (!keys.includes(k)) keys.push(k); });
 
     if (!rows.length) { container.innerHTML = '<div class="empty-hint">尚無資料</div>'; return; }
 
-    days.forEach((day, di) => {
-      const dayRows = rows.filter(r => (r['日期'] || '未分類') === day);
+    keys.forEach(key => {
+      const dayRows = rows.filter(r => (normalizeDayKey(r['日期']) || '未分類') === key);
       const dayTotal = dayRows.reduce((s, r) => s + twdOf(r), 0);
 
       const acc = document.createElement('div');
@@ -579,8 +600,8 @@
       summary.className = 'day-summary';
       summary.innerHTML =
         '<div class="day-summary-left">' +
-          '<div class="day-badge">' + (DAY_LABELS[day] || '—') + '</div>' +
-          '<div><div class="day-summary-name">' + day + '</div>' +
+          '<div class="day-badge">' + dayBadge(key) + '</div>' +
+          '<div><div class="day-summary-name">' + dayFullLabel(key) + '</div>' +
           '<div class="day-summary-sub">' + dayRows.length + ' 筆消費</div></div>' +
         '</div>' +
         '<div class="day-summary-right">' +
