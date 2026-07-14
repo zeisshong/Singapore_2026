@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>新加坡旅遊記帳</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { font-size: clamp(16.5px, 2.4vw, 19px); }
@@ -50,10 +49,47 @@
   .section-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 0.9rem; }
   .section-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.7rem; color: var(--text-primary); }
 
-  .chart-box { max-width: 200px; margin: 0 auto 0.8rem; }
-  .legend-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; padding: 0.25rem 0; }
-  .legend-name { display: flex; align-items: center; gap: 0.4rem; color: var(--text-secondary); }
+  .donut-wrap { display: flex; align-items: center; gap: 1.2rem; }
+  .donut-wrap svg { flex-shrink: 0; }
+  .legend { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 0; }
+  .legend-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; padding: 0.25rem 0; gap: 0.5rem; }
+  .legend-name { display: flex; align-items: center; gap: 0.4rem; color: var(--text-secondary); min-width: 0; }
   .legend-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; flex-shrink: 0; }
+
+  /* 旅遊亮點卡 */
+  .highlight-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 0.5px solid var(--border); }
+  .highlight-row:last-child { border-bottom: none; }
+  .highlight-label { font-size: 0.72rem; color: var(--text-hint); margin-bottom: 0.2rem; }
+  .highlight-main { font-size: 0.85rem; font-weight: 600; }
+  .highlight-sub { font-size: 0.74rem; color: var(--text-secondary); }
+  .highlight-amt { font-size: 0.95rem; font-weight: 700; color: var(--teal-mid); text-align: right; white-space: nowrap; }
+  .highlight-amt-sub { font-size: 0.72rem; color: var(--text-hint); text-align: right; }
+
+  /* 每日 Accordion */
+  .day-accordion { border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 0.6rem; }
+  .day-accordion:last-child { margin-bottom: 0; }
+  .day-summary { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0.9rem; background: var(--surface); cursor: pointer; user-select: none; gap: 0.6rem; }
+  .day-summary-left { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+  .day-badge { background: var(--teal-pale); color: var(--teal-dark); border-radius: 0.4rem; padding: 0.25rem 0.5rem; font-size: 0.72rem; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+  .day-summary-name { font-size: 0.85rem; font-weight: 600; }
+  .day-summary-sub { font-size: 0.72rem; color: var(--text-hint); margin-top: 0.1rem; }
+  .day-summary-right { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+  .day-summary-amount { font-size: 0.9rem; font-weight: 700; color: var(--teal-mid); text-align: right; }
+  .day-chevron { color: var(--text-hint); font-size: 0.72rem; transition: transform 0.2s; }
+  .day-accordion.open .day-chevron { transform: rotate(180deg); }
+  .day-detail { display: none; background: var(--surface-2); padding: 0.75rem 0.9rem; border-top: 0.5px solid var(--border); }
+  .day-accordion.open .day-detail { display: block; }
+  .mini-cat-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.45rem; }
+  .mini-cat-label { font-size: 0.72rem; color: var(--text-secondary); min-width: 4.4rem; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mini-bar-track { flex: 1; background: var(--border); border-radius: 4px; height: 0.45rem; }
+  .mini-bar-fill { height: 100%; border-radius: 4px; }
+  .mini-cat-amt { font-size: 0.72rem; color: var(--text-hint); min-width: 4.4rem; text-align: right; flex-shrink: 0; }
+  .day-record { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; padding: 0.5rem 0; border-top: 0.5px solid var(--border); }
+  .day-record-main { min-width: 0; }
+  .day-record-desc { font-size: 0.78rem; font-weight: 500; }
+  .day-record-place { font-size: 0.7rem; color: var(--text-hint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .day-record-amt { font-size: 0.78rem; font-weight: 700; color: var(--teal-mid); text-align: right; flex-shrink: 0; }
+  .day-record-amt-sub { font-size: 0.68rem; color: var(--text-hint); text-align: right; }
 
   .expense-item { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.8rem 0.9rem; margin-bottom: 0.6rem; }
   .expense-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
@@ -134,13 +170,20 @@
 
     <div class="section-card">
       <div class="section-title">類別比例</div>
-      <div class="chart-box"><canvas id="categoryChart"></canvas></div>
-      <div id="categoryLegend"></div>
+      <div class="donut-wrap">
+        <svg id="donutSvg" width="120" height="120" viewBox="0 0 120 120"></svg>
+        <div class="legend" id="categoryLegend"></div>
+      </div>
     </div>
 
     <div class="section-card">
       <div class="section-title">幣別結構</div>
       <div id="currencyBreakdown"></div>
+    </div>
+
+    <div class="section-card" id="highlightCard" style="display:none;">
+      <div class="section-title">旅遊亮點</div>
+      <div id="highlightContent"></div>
     </div>
 
     <div class="section-card">
@@ -258,7 +301,6 @@
   window.addEventListener('resize', updateStickyHeight);
   updateStickyHeight();
   let allRows = [];
-  let categoryChartInstance = null;
 
   function switchTab(id) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -427,6 +469,13 @@
     }
   }
 
+  const CATEGORY_ICONS = {
+    '機票': '✈', '住宿': '🏨', '門票': '🎡', '交通': '🚗',
+    '餐飲': '🍜', '保險/通訊': '🛡', '購物/雜支': '🛍'
+  };
+  const DAY_ORDER = ['7/22（三)', '7/23（四)', '7/24（五)'];
+  const DAY_LABELS = { '7/22（三)': 'Day 1', '7/23（四)': 'Day 2', '7/24（五)': 'Day 3' };
+
   function renderStats() {
     const total = allRows.reduce((s, r) => s + twdOf(r), 0);
     document.getElementById('statTotal').textContent = total ? 'NT$' + total.toLocaleString() : '—';
@@ -438,18 +487,7 @@
       catTotals[cat] = (catTotals[cat] || 0) + twdOf(r);
     });
     const catKeys = Object.keys(catTotals);
-    const ctx = document.getElementById('categoryChart').getContext('2d');
-    if (categoryChartInstance) categoryChartInstance.destroy();
-    if (catKeys.length) {
-      categoryChartInstance = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: catKeys,
-          datasets: [{ data: catKeys.map(k => catTotals[k]), backgroundColor: catKeys.map(k => CATEGORY_COLORS[k] || '#999'), borderColor: '#fff', borderWidth: 1.5 }]
-        },
-        options: { plugins: { legend: { display: false } } }
-      });
-    }
+    renderDonut(catKeys, catTotals, total || 1);
     document.getElementById('categoryLegend').innerHTML = catKeys.map(k => {
       const pct = total ? (catTotals[k] / total * 100).toFixed(1) : '0';
       return '<div class="legend-row"><span class="legend-name"><span class="legend-dot" style="background:' + (CATEGORY_COLORS[k] || '#999') + '"></span>' + k + '</span><span>NT$' + catTotals[k].toLocaleString() + '（' + pct + '%）</span></div>';
@@ -464,14 +502,137 @@
       '<div class="legend-row"><span class="legend-name">' + (CURRENCY_SYMBOL[cur] || '') + ' ' + cur + '</span><span>' + curTotals[cur].toLocaleString() + '（≈NT$' + Math.round(curTotals[cur] * (FX_RATE[cur] || 1)).toLocaleString() + '）</span></div>'
     ).join('') || '<div class="empty-hint">尚無資料</div>';
 
-    const dayTotals = {};
-    allRows.forEach(r => {
-      const day = r['日期'] || '未分類';
-      dayTotals[day] = (dayTotals[day] || 0) + twdOf(r);
+    renderHighlights(allRows);
+    renderDayAccordions(allRows);
+  }
+
+  // SVG 甜甜圈圖（沿用沖繩版做法，改吃 { catKey: 金額 } 物件）
+  function renderDonut(keys, totals, total) {
+    const cx = 60, cy = 60, r = 48, inner = 28;
+    let angle = -Math.PI / 2;
+    let paths = '';
+    keys.forEach(k => {
+      const v = totals[k];
+      if (!v) return;
+      const sweep = (v / total) * 2 * Math.PI;
+      const x1 = cx + r * Math.cos(angle), y1 = cy + r * Math.sin(angle);
+      angle += sweep;
+      const x2 = cx + r * Math.cos(angle), y2 = cy + r * Math.sin(angle);
+      const xi1 = cx + inner * Math.cos(angle), yi1 = cy + inner * Math.sin(angle);
+      const xi2 = cx + inner * Math.cos(angle - sweep), yi2 = cy + inner * Math.sin(angle - sweep);
+      const large = sweep > Math.PI ? 1 : 0;
+      const color = CATEGORY_COLORS[k] || '#999';
+      paths += '<path d="M' + x1.toFixed(1) + ',' + y1.toFixed(1) + ' A' + r + ',' + r + ' 0 ' + large + ',1 ' + x2.toFixed(1) + ',' + y2.toFixed(1) + ' L' + xi1.toFixed(1) + ',' + yi1.toFixed(1) + ' A' + inner + ',' + inner + ' 0 ' + large + ',0 ' + xi2.toFixed(1) + ',' + yi2.toFixed(1) + ' Z" fill="' + color + '" opacity="0.92"/>';
     });
-    document.getElementById('dailyBreakdown').innerHTML = Object.keys(dayTotals).map(day =>
-      '<div class="legend-row"><span class="legend-name">' + day + '</span><span>NT$' + dayTotals[day].toLocaleString() + '</span></div>'
-    ).join('') || '<div class="empty-hint">尚無資料</div>';
+    document.getElementById('donutSvg').innerHTML = paths;
+  }
+
+  // 旅遊亮點卡：最大一筆消費、最花錢的一天
+  function renderHighlights(rows) {
+    const valid = rows.filter(r => (Number(r['金額']) || 0) > 0);
+    const card = document.getElementById('highlightCard');
+    if (!valid.length) { card.style.display = 'none'; return; }
+    card.style.display = 'block';
+
+    const maxRec = valid.reduce((a, b) => twdOf(b) > twdOf(a) ? b : a);
+    const cur = maxRec['幣別'] || 'TWD';
+    const symbol = CURRENCY_SYMBOL[cur] || '';
+
+    const dayTotals = DAY_ORDER.map(day => ({
+      day, total: valid.filter(r => (r['日期'] || '') === day).reduce((s, r) => s + twdOf(r), 0)
+    }));
+    const maxDay = dayTotals.reduce((a, b) => b.total > a.total ? b : a);
+
+    document.getElementById('highlightContent').innerHTML =
+      '<div class="highlight-row">' +
+        '<div><div class="highlight-label">最大一筆</div>' +
+        '<div class="highlight-main">' + (maxRec['說明'] || maxRec['地點/店名'] || maxRec['地點／店名'] || '') + '</div>' +
+        '<div class="highlight-sub">' + (maxRec['地點/店名'] || maxRec['地點／店名'] || '') + '</div></div>' +
+        '<div><div class="highlight-amt">' + symbol + (Number(maxRec['金額'])||0).toLocaleString() + '</div>' +
+        (cur !== 'TWD' ? '<div class="highlight-amt-sub">≈ NT$' + twdOf(maxRec).toLocaleString() + '</div>' : '') + '</div>' +
+      '</div>' +
+      '<div class="highlight-row">' +
+        '<div><div class="highlight-label">最花錢的一天</div>' +
+        '<div class="highlight-main">' + maxDay.day + '</div></div>' +
+        '<div class="highlight-amt">NT$' + Math.round(maxDay.total).toLocaleString() + '</div>' +
+      '</div>';
+  }
+
+  // 每日 Accordion：預設收合，展開顯示當日類別 mini bar + 逐筆明細
+  function renderDayAccordions(rows) {
+    const container = document.getElementById('dailyBreakdown');
+    container.innerHTML = '';
+    const days = DAY_ORDER.slice();
+    // 若資料裡出現不在既定日期清單的日期，補到最後
+    rows.forEach(r => { const d = r['日期'] || '未分類'; if (!days.includes(d)) days.push(d); });
+
+    if (!rows.length) { container.innerHTML = '<div class="empty-hint">尚無資料</div>'; return; }
+
+    days.forEach((day, di) => {
+      const dayRows = rows.filter(r => (r['日期'] || '未分類') === day);
+      const dayTotal = dayRows.reduce((s, r) => s + twdOf(r), 0);
+
+      const acc = document.createElement('div');
+      acc.className = 'day-accordion';
+
+      const summary = document.createElement('div');
+      summary.className = 'day-summary';
+      summary.innerHTML =
+        '<div class="day-summary-left">' +
+          '<div class="day-badge">' + (DAY_LABELS[day] || '—') + '</div>' +
+          '<div><div class="day-summary-name">' + day + '</div>' +
+          '<div class="day-summary-sub">' + dayRows.length + ' 筆消費</div></div>' +
+        '</div>' +
+        '<div class="day-summary-right">' +
+          '<div class="day-summary-amount">NT$' + Math.round(dayTotal).toLocaleString() + '</div>' +
+          '<div class="day-chevron">▼</div>' +
+        '</div>';
+      summary.onclick = () => acc.classList.toggle('open');
+
+      const detail = document.createElement('div');
+      detail.className = 'day-detail';
+
+      if (!dayRows.length) {
+        detail.innerHTML = '<div class="empty-hint" style="padding:0.5rem 0;">本日無消費記錄</div>';
+      } else {
+        const catAmt = {};
+        dayRows.forEach(r => {
+          const cat = r['類別'] || '購物/雜支';
+          catAmt[cat] = (catAmt[cat] || 0) + twdOf(r);
+        });
+        const dayMax = Math.max(...Object.values(catAmt), 1);
+        const miniBars = Object.keys(catAmt).map(cat => {
+          const amt = catAmt[cat];
+          return '<div class="mini-cat-row">' +
+            '<div class="mini-cat-label">' + (CATEGORY_ICONS[cat] || '📦') + ' ' + cat + '</div>' +
+            '<div class="mini-bar-track"><div class="mini-bar-fill" style="width:' + Math.round(amt / dayMax * 100) + '%;background:' + (CATEGORY_COLORS[cat] || '#999') + '"></div></div>' +
+            '<div class="mini-cat-amt">NT$' + Math.round(amt).toLocaleString() + '</div>' +
+          '</div>';
+        }).join('');
+
+        const recRows = dayRows.map(r => {
+          const cur = r['幣別'] || 'TWD';
+          const symbol = CURRENCY_SYMBOL[cur] || '';
+          const twd = twdOf(r);
+          return '<div class="day-record">' +
+            '<div class="day-record-main">' +
+              '<div class="day-record-desc">' + (r['說明'] || '') + '</div>' +
+              '<div class="day-record-place">' + (r['地點/店名'] || r['地點／店名'] || '') + '</div>' +
+            '</div>' +
+            '<div>' +
+              '<div class="day-record-amt">' + symbol + (Number(r['金額'])||0).toLocaleString() + '</div>' +
+              (cur !== 'TWD' ? '<div class="day-record-amt-sub">≈ NT$' + twd.toLocaleString() + '</div>' : '') +
+            '</div>' +
+          '</div>';
+        }).join('');
+
+        detail.innerHTML = miniBars + recRows;
+      }
+
+      acc.appendChild(summary);
+      acc.appendChild(detail);
+      container.appendChild(acc);
+    });
   }
 
   function renderList() {
