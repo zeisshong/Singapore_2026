@@ -244,6 +244,14 @@
   .copy-chip:active { background: var(--teal-pale); }
   .copy-chip .copy-icon { font-size: 0.72rem; }
 </style>
+<meta name="theme-color" content="#1F8A70">
+<meta name="description" content="Dino's Singapore Adventure｜小暴龍的新加坡冒險日記">
+<meta property="og:title" content="Dino's Singapore Adventure">
+<meta property="og:description" content="小暴龍的新加坡冒險日記">
+<meta property="og:type" content="website">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/dino/dino-transparent.png" type="image/png">
+<link rel="stylesheet" href="css/modern.css">
 </head>
 <body>
 
@@ -290,6 +298,15 @@
   </button>
 </div>
 </div>
+
+<section class="adventure-dashboard" aria-label="旅行快速資訊">
+  <div class="dashboard-grid">
+    <article class="dash-card weather-card"><div class="dash-kicker">新加坡即時天氣</div><div class="dash-main" id="weather-main">讀取中…</div><p id="weather-detail">正在取得最新天氣資料。</p></article>
+    <article class="dash-card"><div class="dash-kicker" id="highlight-title">今日亮點</div><strong id="highlight-main">依日期更新行程</strong><p id="highlight-detail">正在判斷目前旅程階段。</p></article>
+    <article class="dash-card"><div class="dash-kicker">預算概覽</div><div class="dash-main"><strong id="budget-spent">讀取中…</strong></div><p id="budget-detail">依記帳系統快取動態更新。</p></article>
+    <article class="dash-card dino-tip-card"><div><div class="dash-kicker">小暴龍提醒</div><strong id="dino-tip">依當日行程更新提醒。</strong></div><img src="assets/dino/dino-transparent.png" alt="小暴龍導遊"></article>
+  </div>
+</section>
 
 <div class="tab-content">
 
@@ -927,5 +944,6 @@ async function unlock() {
 }
 </script>
 <a class="expense-fab" href="singapore_expense_2026.html" title="旅遊記帳">🧾</a>
+<script src="js/app.js" defer></script>
 </body>
 </html>
