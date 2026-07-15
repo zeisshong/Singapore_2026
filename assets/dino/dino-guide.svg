@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-label="小暴龍導遊">
+ <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#62C7A5"/><stop offset="1" stop-color="#1F8A70"/></linearGradient></defs>
+ <ellipse cx="158" cy="278" rx="92" ry="20" fill="#163c35" opacity=".12"/>
+ <path d="M81 205c-28-8-48-28-49-53 25 15 48 16 65 8" fill="none" stroke="#1F8A70" stroke-width="28" stroke-linecap="round"/>
+ <path d="M102 83c18-31 59-44 95-29 36 15 54 50 45 84 22 17 35 45 31 74-6 46-47 78-94 72l-43-5c-48-6-82-48-75-94 5-34 27-61 56-73-8-8-14-18-15-29z" fill="url(#g)"/>
+ <path d="M139 52l-1-28 25 18 16-27 10 32" fill="#FFC857" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+ <circle cx="169" cy="91" r="8" fill="#243238"/><circle cx="211" cy="101" r="8" fill="#243238"/>
+ <path d="M170 125c18 13 37 13 54 0" fill="none" stroke="#243238" stroke-width="7" stroke-linecap="round"/>
+ <circle cx="147" cy="112" r="9" fill="#ffc1a8" opacity=".8"/><circle cx="232" cy="120" r="9" fill="#ffc1a8" opacity=".8"/>
+ <path d="M105 173c-27-18-45 19-20 34" fill="none" stroke="#1F8A70" stroke-width="22" stroke-linecap="round"/>
+ <path d="M225 170c28-15 42 23 18 35" fill="none" stroke="#1F8A70" stroke-width="22" stroke-linecap="round"/>
+ <rect x="119" y="150" width="88" height="63" rx="16" fill="#243238"/><circle cx="163" cy="181" r="22" fill="#f6f4ed"/><circle cx="163" cy="181" r="13" fill="#FFC857"/><rect x="133" y="139" width="30" height="18" rx="6" fill="#243238"/>
+ <path d="M123 264l-8 29M215 268l10 25" stroke="#1F8A70" stroke-width="24" stroke-linecap="round"/>
+</svg>

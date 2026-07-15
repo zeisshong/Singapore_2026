@@ -1,0 +1,138 @@
+:root{--brand:#1F8A70;--brand-light:#4DB6AC;--accent:#FFC857;--bg:#F6FAF7;--danger:#E76F51;--ink:#243238;--muted:#68777b;--card:#fff;--line:#dfeae4;--shadow:0 14px 38px rgba(36,50,56,.09);--r:24px}
+html{font-size:16px;scroll-behavior:smooth}body{max-width:980px!important;background:radial-gradient(circle at 10% 0,#e4f6ed,transparent 32%),var(--bg)!important;color:var(--ink)!important;padding-bottom:92px}.sticky-top{max-width:980px!important;background:rgba(246,250,247,.88);backdrop-filter:blur(18px);box-shadow:0 1px 0 rgba(36,50,56,.08)}
+.hero{min-height:190px;padding:24px 28px 22px!important;background:linear-gradient(125deg,#0e705b,#33a889)!important;border-radius:0 0 34px 34px;color:#fff;isolation:isolate}.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 75% 18%,rgba(255,255,255,.24),transparent 22%),linear-gradient(180deg,transparent 55%,rgba(0,0,0,.08));z-index:-1}.hero:after{content:""!important;width:170px;height:170px;right:16px!important;top:14px!important;background:url('../assets/dino/dino-guide.svg') center/contain no-repeat;opacity:1!important}.hero-eyebrow{font-size:.72rem!important;font-weight:800;letter-spacing:.16em!important}.hero-title{font-size:clamp(1.45rem,5vw,2.25rem)!important;max-width:60%;font-weight:900!important;line-height:1.12!important;margin-top:8px}.hero-title:after{content:"\A小暴龍的新加坡冒險日記";white-space:pre;font-size:.78rem;font-weight:600;opacity:.86}.hero-chips{margin-top:16px!important}.chip{padding:6px 12px!important;background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.24)!important;font-weight:700}
+.tab-bar,.tabs{padding:9px 10px 8px;gap:5px;overflow-x:auto;background:transparent!important;border:0!important}.tab-btn{min-width:82px;border-radius:16px!important;padding:9px 8px!important}.tab-btn.active{background:#fff;color:var(--brand)!important;box-shadow:0 7px 20px rgba(31,138,112,.12)}.tab-btn:after{display:none}.tab-dot{display:none}.tab-label{font-weight:800!important}.tab-sub{font-size:.62rem!important}
+.tab-content,.content{padding:22px 16px!important;padding-top:calc(22px + var(--sticky-h,270px))!important}.day-header{border:0!important;border-radius:var(--r)!important;padding:20px!important;box-shadow:var(--shadow);background:#fff!important}.day-num{color:var(--brand)!important;font-weight:900!important}.day-date{color:var(--ink)!important;font-size:1rem!important}.day-tagline{color:var(--muted)!important}.timeline{padding-left:32px}.timeline:before{left:10px!important;width:2px!important;background:linear-gradient(var(--brand-light),#dbe9e2)!important}.dot{left:-28px!important;width:16px!important;height:16px!important;border:4px solid var(--bg)!important;box-shadow:0 0 0 2px var(--brand-light)!important}.entry{margin-bottom:16px!important}.card,.budget-card,.mrt-card,.info-card,.section-card,.stat-card{border:1px solid var(--line)!important;border-radius:var(--r)!important;box-shadow:var(--shadow);transition:.2s ease;background:var(--card)!important}.card{padding:18px!important}.card:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(36,50,56,.12)}.card-title{font-size:1rem!important;font-weight:850!important}.card-time{background:var(--brand)!important}.tag{padding:4px 9px!important}.tip{border-radius:14px!important;background:#f0f8f4!important;border-left:4px solid var(--accent);padding:10px 12px!important}.tip:before{content:"🦖 小暴龍提醒：";font-weight:800;color:var(--brand)}
+.budget-head-bar{background:linear-gradient(115deg,var(--brand),var(--brand-light))!important;padding:20px!important}.budget-total{background:#eaf7f1!important}.budget-total-label,.budget-total-amt{color:var(--brand)!important}.expense-fab{width:auto!important;height:56px!important;border-radius:18px!important;padding:0 20px;right:max(18px,calc((100vw - 940px)/2));background:linear-gradient(135deg,var(--brand),#126d9a)!important;font-size:0!important}.expense-fab:after{content:"🧾  Travel Wallet";font-size:.9rem;font-weight:850}.lock-btn,.btn-primary{background:var(--brand)!important}.lock-screen{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+@media(max-width:520px){.hero{min-height:174px;padding:20px 18px!important}.hero:after{width:132px;height:132px;right:0!important;top:28px!important}.hero-title{max-width:67%;font-size:1.45rem!important}.tab-content,.content{padding-left:12px!important;padding-right:12px!important}.tab-bar{justify-content:flex-start}.card-head{flex-direction:column-reverse}.card-time{align-self:flex-start}.expense-fab{right:14px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+/* 2026 visual direction: illustrated hero + compact-on-scroll navigation */
+.sticky-top{transition:transform .28s ease,box-shadow .28s ease;background:#075f55}.hero{min-height:300px!important;padding:40px 34px 30px!important;background:linear-gradient(180deg,rgba(181,229,255,.96),rgba(225,247,241,.96))!important;color:var(--ink)!important;border-radius:0!important}.hero:before{background:radial-gradient(circle at 85% 15%,#fff 0 5%,transparent 6%),radial-gradient(circle at 75% 28%,rgba(255,255,255,.8) 0 7%,transparent 8%),linear-gradient(180deg,transparent 62%,rgba(31,138,112,.16))!important}.hero:after{background:url('../assets/dino/dino-transparent.png') center/contain no-repeat!important;width:220px!important;height:250px!important;right:3%!important;top:40px!important;filter:drop-shadow(0 16px 14px rgba(20,65,55,.18))}.hero-eyebrow{color:#0b685a;opacity:1!important}.hero-title{font-size:clamp(2rem,6vw,3.35rem)!important;max-width:62%;color:#0d745f!important;letter-spacing:-.03em}.hero-title:after{content:"\A小暴龍的新加坡冒險日記\A2026.07.22－07.24 · 3天2夜"!important;color:#243238;font-size:.88rem!important;line-height:2}.chip{background:#fff!important;color:#175f52!important;border-color:rgba(31,138,112,.18)!important}.tab-bar{background:linear-gradient(90deg,#005e55,#007167)!important;padding:10px 18px!important}.tab-btn{color:rgba(255,255,255,.76)!important}.tab-btn.active{background:rgba(255,255,255,.16)!important;color:#fff!important;box-shadow:none}.sticky-top.is-compact .hero{height:0!important;min-height:0!important;padding-top:0!important;padding-bottom:0!important;opacity:0;pointer-events:none}.sticky-top.is-compact .tab-bar{padding-top:6px!important;padding-bottom:6px!important}.sticky-top.is-compact .tab-sub{display:none}.sticky-top.is-compact .tab-btn{padding:7px 8px!important}.adventure-dashboard{max-width:980px;margin:0 auto;padding:calc(var(--sticky-h,390px) + 18px) 16px 6px}.quick-actions{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;background:#fff;border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow)}.quick-actions a{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;text-decoration:none;color:var(--ink);font-weight:800;font-size:.72rem;padding:13px 6px;border-radius:18px;background:#fbfdfc;border:1px solid #edf3ef}.quick-actions span{font-size:1.45rem}.dashboard-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.dash-card{min-height:150px;padding:18px;border-radius:22px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}.dash-kicker{color:var(--brand);font-size:.78rem;font-weight:900;margin-bottom:12px}.dash-main{font-size:1.2rem;margin-bottom:8px}.dash-card p{font-size:.75rem;color:var(--muted);line-height:1.5;margin-top:8px}.weather-card{background:linear-gradient(145deg,#edf9ff,#fff)}.dino-tip-card{display:flex;align-items:flex-end;justify-content:space-between;overflow:hidden}.dino-tip-card img{width:88px;max-height:110px;object-fit:contain}.tab-content{padding-top:20px!important}.tab-content::before{content:"行程總覽";display:block;font-size:1.4rem;font-weight:900;color:#0b685a;margin:2px 2px 18px}.sticky-top.is-compact + .adventure-dashboard{padding-top:92px}
+@media(max-width:760px){.hero{min-height:260px!important;padding:28px 20px!important}.hero:after{width:150px!important;height:185px!important;right:-5px!important;top:64px!important}.hero-title{font-size:1.85rem!important;max-width:72%}.quick-actions{grid-template-columns:repeat(3,1fr);padding:12px}.dashboard-grid{grid-template-columns:1fr 1fr}.adventure-dashboard{padding-left:12px;padding-right:12px}.tab-bar{overflow-x:auto;justify-content:flex-start}.tab-btn{min-width:86px}}
+@media(max-width:460px){.dashboard-grid{grid-template-columns:1fr}.hero{min-height:238px!important}.hero-title{font-size:1.55rem!important}.hero:after{width:126px!important;height:158px!important}.quick-actions a{font-size:.67rem}}
+
+.quick-actions{display:none!important}.dashboard-grid{margin-top:0}.dino-tip-card img{width:108px;max-height:128px;object-fit:contain;background:transparent!important;image-rendering:auto}.dash-card strong{line-height:1.45}
+
+
+/* v4 header alignment and typography fixes */
+.hero-title::after{content:none!important;display:none!important}
+.hero-meta,.hero-date{position:relative;z-index:1;color:#243238;font-weight:700;line-height:1.35}
+.hero-meta{font-size:clamp(.9rem,2vw,1.05rem);margin-top:16px}
+.hero-date{font-size:clamp(.78rem,1.7vw,.92rem);margin-top:4px}
+.page-index .hero-title,.page-expense .hero-title{font-size:clamp(2rem,6vw,3.35rem)!important;line-height:1.08!important;letter-spacing:-.03em!important}
+.page-expense .hero{min-height:300px!important;padding:40px 34px 30px!important}
+.page-expense .hero-title{max-width:62%;color:#0d745f!important}
+.page-expense .hero-eyebrow{color:#0b685a!important}
+.page-expense .hero-chips{margin-top:16px!important}
+.page-expense .tabs{background:linear-gradient(90deg,#005e55,#007167)!important;padding:10px 18px!important}
+.page-expense .tab-btn{color:rgba(255,255,255,.76)!important}
+.page-expense .tab-btn.active{background:rgba(255,255,255,.16)!important;color:#fff!important}
+.page-expense .sticky-top.is-compact .hero{height:0!important;min-height:0!important;padding-top:0!important;padding-bottom:0!important;opacity:0;pointer-events:none}
+.page-expense .sticky-top.is-compact .tabs{padding-top:6px!important;padding-bottom:6px!important}
+@media(max-width:760px){
+  .page-index .hero-title,.page-expense .hero-title{font-size:1.85rem!important;max-width:72%!important}
+  .page-index .hero-meta,.page-expense .hero-meta{font-size:.88rem;margin-top:12px}
+  .page-index .hero-date,.page-expense .hero-date{font-size:.78rem}
+  .page-expense .hero{min-height:260px!important;padding:28px 20px!important}
+}
+@media(max-width:460px){
+  .page-index .hero-title,.page-expense .hero-title{font-size:1.55rem!important}
+}
+
+/* v5: unified hero copy, typography system and Singapore palette */
+:root{
+  --font-size-caption:.75rem;
+  --font-size-body:.875rem;
+  --font-size-body-lg:1rem;
+  --font-size-section:1.125rem;
+  --font-size-page:clamp(1.8rem,4.2vw,2.5rem);
+  --line-height-body:1.6;
+}
+html{font-size:16px!important}
+body{font-size:var(--font-size-body)!important;line-height:var(--line-height-body)!important}
+.hero-title::after{content:none!important;display:none!important}
+.hero-title{
+  font-size:var(--font-size-page)!important;
+  line-height:1.12!important;
+  max-width:62%!important;
+  margin-top:8px!important;
+  letter-spacing:-.025em!important;
+}
+.hero-subtitle{
+  position:relative;
+  z-index:1;
+  margin-top:16px;
+  color:#243238;
+  font-size:var(--font-size-body-lg)!important;
+  font-weight:700;
+  line-height:1.4;
+}
+.hero-date{
+  font-size:var(--font-size-body)!important;
+  font-weight:600!important;
+  line-height:1.4!important;
+  margin-top:3px!important;
+}
+.hero-eyebrow,.tab-sub,.stat-label,.highlight-label,.day-summary-sub,
+.mini-cat-label,.mini-cat-amt,.day-record-place,.day-record-amt-sub,
+.form-label,.legend-row,.chart-legend-row,.chart-legend-pct,.note,
+.info-label,.info-subtitle,.map-link,.mrt-tap-hint,.tag,.cost{
+  font-size:var(--font-size-caption)!important;
+}
+.card-desc,.card-desc-list,.expense-desc,.day-record-desc,.info-val,
+.info-notice,.budget-label,.budget-amt,.highlight-sub,.empty-hint,
+.dash-card p,.tab-label,.expense-place,.day-summary-name{
+  font-size:var(--font-size-body)!important;
+  line-height:var(--line-height-body)!important;
+}
+.card-title,.budget-head-title,.section-title,.info-title,.dash-kicker,
+.highlight-main,.day-summary-amount,.expense-amt,.day-record-amt,
+.budget-total-label{
+  font-size:var(--font-size-body-lg)!important;
+  line-height:1.4!important;
+}
+.day-num,.tab-content::before{font-size:var(--font-size-section)!important;line-height:1.35!important}
+.stat-value,.budget-total-amt{font-size:1.35rem!important;line-height:1.25!important}
+.page-index .hero-title,.page-expense .hero-title{font-size:var(--font-size-page)!important}
+@media(max-width:760px){
+  .hero-title,.page-index .hero-title,.page-expense .hero-title{
+    font-size:1.75rem!important;
+    max-width:72%!important;
+  }
+  .hero-subtitle{font-size:.9rem!important;margin-top:12px!important}
+  .hero-date{font-size:.8rem!important}
+}
+@media(max-width:460px){
+  .hero-title,.page-index .hero-title,.page-expense .hero-title{font-size:1.5rem!important}
+}
+
+
+/* v6: compact weather-only dashboard, remove duplicate date pills, expense navigation */
+.hero-chips{display:none!important}
+.weather-dashboard{padding-bottom:8px!important}
+.weather-dashboard .dashboard-grid{display:block!important}
+.weather-card-single{min-height:auto!important;display:flex;align-items:center;gap:24px;padding:16px 20px!important}
+.weather-card-single .dash-kicker{margin:0!important;white-space:nowrap}
+.weather-inline{display:flex;align-items:center;gap:18px;min-width:0}
+.weather-card-single .dash-main{margin:0!important;white-space:nowrap}
+.weather-card-single p{margin:0!important}
+.page-expense .hero:after{display:none!important}
+.expense-hero{position:relative}
+.expense-hero-dino{position:absolute;z-index:2;right:3%;top:34px;width:220px;height:250px;object-fit:contain;filter:drop-shadow(0 16px 14px rgba(20,65,55,.18));pointer-events:none}
+.expense-back-link{position:absolute;z-index:3;left:24px;top:18px;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(31,138,112,.2);color:#175f52;text-decoration:none;font-size:.8rem;font-weight:800;box-shadow:0 6px 18px rgba(36,50,56,.08)}
+.page-expense .hero-eyebrow{margin-top:30px}
+@media(max-width:760px){
+  .weather-card-single{display:block;padding:14px 16px!important}
+  .weather-card-single .dash-kicker{margin-bottom:8px!important}
+  .weather-inline{display:block}
+  .weather-card-single .dash-main{margin-bottom:4px!important}
+  .expense-hero-dino{width:150px;height:185px;right:-5px;top:58px}
+  .expense-back-link{left:14px;top:12px;padding:6px 10px;font-size:.75rem}
+  .page-expense .hero-eyebrow{margin-top:32px}
+}
+@media(max-width:460px){
+  .weather-dashboard{padding-top:calc(var(--sticky-h,330px) + 10px)!important}
+  .weather-card-single{border-radius:18px!important}
+  .weather-card-single p{font-size:.8rem!important}
+  .expense-hero-dino{width:126px;height:158px;right:-4px;top:72px}
+}

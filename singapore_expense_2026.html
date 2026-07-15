@@ -139,17 +139,25 @@
   .toast { position: fixed; bottom: 6rem; left: 50%; transform: translateX(-50%); background: rgba(20,20,20,0.9);
     color: #fff; padding: 0.55rem 1.1rem; border-radius: 20px; font-size: 0.8rem; z-index: 1000; display: none; }
 </style>
+<meta name="theme-color" content="#1F8A70">
+<meta name="description" content="Dino's Singapore Adventure｜小暴龍的新加坡冒險日記">
+<meta property="og:title" content="Dino's Singapore Adventure">
+<meta property="og:description" content="小暴龍的新加坡冒險日記">
+<meta property="og:type" content="website">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/dino/dino-guide.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/modern.css">
 </head>
-<body>
+<body class="page-expense">
 
 <div class="sticky-top">
-<div class="hero">
+<div class="hero expense-hero">
+  <a class="expense-back-link" href="index.html" aria-label="返回行程表">← 返回行程表</a>
+  <img class="expense-hero-dino" src="assets/dino/dino-transparent.png" alt="小暴龍導遊">
   <div class="hero-eyebrow">新加坡旅遊記帳</div>
-  <div class="hero-title">🧾 費用總覽</div>
-  <div class="hero-chips">
-    <a class="chip" href="index.html" style="text-decoration:none">← 行程表</a>
-    <span class="chip">7/22–7/24</span>
-  </div>
+  <div class="hero-title">費用總覽</div>
+  <div class="hero-subtitle">小暴龍的新加坡冒險日記</div>
+  <div class="hero-date">2026.07.22－07.24 · 3天2夜</div>
 </div>
 
 <div class="tabs">
@@ -295,8 +303,15 @@
   const TRIP = 'singapore';
 
   const CATEGORY_COLORS = {
-    '機票': '#7A9BAE', '住宿': '#E0A85F', '門票': '#E17A4C', '交通': '#C1633E',
-    '餐飲': '#7A5245', '保險/通訊': '#C97C74', '購物/雜支': '#8C8479'
+    '機票': '#4F8FA8',
+    '住宿': '#E9B44C',
+    '門票': '#F4A261',
+    '樂園門票': '#F4A261',
+    '交通': '#2A9D8F',
+    '市內交通': '#2A9D8F',
+    '餐飲': '#E76F51',
+    '保險/通訊': '#6C8EAD',
+    '購物/雜支': '#A8B5A2'
   };
   const FX_RATE = { SGD: 24.8, USD: 32.1, TWD: 1 };
   const CURRENCY_SYMBOL = { SGD: 'S$', USD: '$', TWD: 'NT$' };
@@ -736,5 +751,6 @@
   loadData();
 </script>
 
+<script src="js/app.js" defer></script>
 </body>
 </html>
