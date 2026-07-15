@@ -12,3 +12,96 @@ html{font-size:16px;scroll-behavior:smooth}body{max-width:980px!important;backgr
 @media(max-width:460px){.dashboard-grid{grid-template-columns:1fr}.hero{min-height:238px!important}.hero-title{font-size:1.55rem!important}.hero:after{width:126px!important;height:158px!important}.quick-actions a{font-size:.67rem}}
 
 .quick-actions{display:none!important}.dashboard-grid{margin-top:0}.dino-tip-card img{width:108px;max-height:128px;object-fit:contain;background:transparent!important;image-rendering:auto}.dash-card strong{line-height:1.45}
+
+
+/* v4 header alignment and typography fixes */
+.hero-title::after{content:none!important;display:none!important}
+.hero-meta,.hero-date{position:relative;z-index:1;color:#243238;font-weight:700;line-height:1.35}
+.hero-meta{font-size:clamp(.9rem,2vw,1.05rem);margin-top:16px}
+.hero-date{font-size:clamp(.78rem,1.7vw,.92rem);margin-top:4px}
+.page-index .hero-title,.page-expense .hero-title{font-size:clamp(2rem,6vw,3.35rem)!important;line-height:1.08!important;letter-spacing:-.03em!important}
+.page-expense .hero{min-height:300px!important;padding:40px 34px 30px!important}
+.page-expense .hero-title{max-width:62%;color:#0d745f!important}
+.page-expense .hero-eyebrow{color:#0b685a!important}
+.page-expense .hero-chips{margin-top:16px!important}
+.page-expense .tabs{background:linear-gradient(90deg,#005e55,#007167)!important;padding:10px 18px!important}
+.page-expense .tab-btn{color:rgba(255,255,255,.76)!important}
+.page-expense .tab-btn.active{background:rgba(255,255,255,.16)!important;color:#fff!important}
+.page-expense .sticky-top.is-compact .hero{height:0!important;min-height:0!important;padding-top:0!important;padding-bottom:0!important;opacity:0;pointer-events:none}
+.page-expense .sticky-top.is-compact .tabs{padding-top:6px!important;padding-bottom:6px!important}
+@media(max-width:760px){
+  .page-index .hero-title,.page-expense .hero-title{font-size:1.85rem!important;max-width:72%!important}
+  .page-index .hero-meta,.page-expense .hero-meta{font-size:.88rem;margin-top:12px}
+  .page-index .hero-date,.page-expense .hero-date{font-size:.78rem}
+  .page-expense .hero{min-height:260px!important;padding:28px 20px!important}
+}
+@media(max-width:460px){
+  .page-index .hero-title,.page-expense .hero-title{font-size:1.55rem!important}
+}
+
+/* v5: unified hero copy, typography system and Singapore palette */
+:root{
+  --font-size-caption:.75rem;
+  --font-size-body:.875rem;
+  --font-size-body-lg:1rem;
+  --font-size-section:1.125rem;
+  --font-size-page:clamp(1.8rem,4.2vw,2.5rem);
+  --line-height-body:1.6;
+}
+html{font-size:16px!important}
+body{font-size:var(--font-size-body)!important;line-height:var(--line-height-body)!important}
+.hero-title::after{content:none!important;display:none!important}
+.hero-title{
+  font-size:var(--font-size-page)!important;
+  line-height:1.12!important;
+  max-width:62%!important;
+  margin-top:8px!important;
+  letter-spacing:-.025em!important;
+}
+.hero-subtitle{
+  position:relative;
+  z-index:1;
+  margin-top:16px;
+  color:#243238;
+  font-size:var(--font-size-body-lg)!important;
+  font-weight:700;
+  line-height:1.4;
+}
+.hero-date{
+  font-size:var(--font-size-body)!important;
+  font-weight:600!important;
+  line-height:1.4!important;
+  margin-top:3px!important;
+}
+.hero-eyebrow,.tab-sub,.stat-label,.highlight-label,.day-summary-sub,
+.mini-cat-label,.mini-cat-amt,.day-record-place,.day-record-amt-sub,
+.form-label,.legend-row,.chart-legend-row,.chart-legend-pct,.note,
+.info-label,.info-subtitle,.map-link,.mrt-tap-hint,.tag,.cost{
+  font-size:var(--font-size-caption)!important;
+}
+.card-desc,.card-desc-list,.expense-desc,.day-record-desc,.info-val,
+.info-notice,.budget-label,.budget-amt,.highlight-sub,.empty-hint,
+.dash-card p,.tab-label,.expense-place,.day-summary-name{
+  font-size:var(--font-size-body)!important;
+  line-height:var(--line-height-body)!important;
+}
+.card-title,.budget-head-title,.section-title,.info-title,.dash-kicker,
+.highlight-main,.day-summary-amount,.expense-amt,.day-record-amt,
+.budget-total-label{
+  font-size:var(--font-size-body-lg)!important;
+  line-height:1.4!important;
+}
+.day-num,.tab-content::before{font-size:var(--font-size-section)!important;line-height:1.35!important}
+.stat-value,.budget-total-amt{font-size:1.35rem!important;line-height:1.25!important}
+.page-index .hero-title,.page-expense .hero-title{font-size:var(--font-size-page)!important}
+@media(max-width:760px){
+  .hero-title,.page-index .hero-title,.page-expense .hero-title{
+    font-size:1.75rem!important;
+    max-width:72%!important;
+  }
+  .hero-subtitle{font-size:.9rem!important;margin-top:12px!important}
+  .hero-date{font-size:.8rem!important}
+}
+@media(max-width:460px){
+  .hero-title,.page-index .hero-title,.page-expense .hero-title{font-size:1.5rem!important}
+}
