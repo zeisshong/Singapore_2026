@@ -105,3 +105,34 @@ body{font-size:var(--font-size-body)!important;line-height:var(--line-height-bod
 @media(max-width:460px){
   .hero-title,.page-index .hero-title,.page-expense .hero-title{font-size:1.5rem!important}
 }
+
+
+/* v6: compact weather-only dashboard, remove duplicate date pills, expense navigation */
+.hero-chips{display:none!important}
+.weather-dashboard{padding-bottom:8px!important}
+.weather-dashboard .dashboard-grid{display:block!important}
+.weather-card-single{min-height:auto!important;display:flex;align-items:center;gap:24px;padding:16px 20px!important}
+.weather-card-single .dash-kicker{margin:0!important;white-space:nowrap}
+.weather-inline{display:flex;align-items:center;gap:18px;min-width:0}
+.weather-card-single .dash-main{margin:0!important;white-space:nowrap}
+.weather-card-single p{margin:0!important}
+.page-expense .hero:after{display:none!important}
+.expense-hero{position:relative}
+.expense-hero-dino{position:absolute;z-index:2;right:3%;top:34px;width:220px;height:250px;object-fit:contain;filter:drop-shadow(0 16px 14px rgba(20,65,55,.18));pointer-events:none}
+.expense-back-link{position:absolute;z-index:3;left:24px;top:18px;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(31,138,112,.2);color:#175f52;text-decoration:none;font-size:.8rem;font-weight:800;box-shadow:0 6px 18px rgba(36,50,56,.08)}
+.page-expense .hero-eyebrow{margin-top:30px}
+@media(max-width:760px){
+  .weather-card-single{display:block;padding:14px 16px!important}
+  .weather-card-single .dash-kicker{margin-bottom:8px!important}
+  .weather-inline{display:block}
+  .weather-card-single .dash-main{margin-bottom:4px!important}
+  .expense-hero-dino{width:150px;height:185px;right:-5px;top:58px}
+  .expense-back-link{left:14px;top:12px;padding:6px 10px;font-size:.75rem}
+  .page-expense .hero-eyebrow{margin-top:32px}
+}
+@media(max-width:460px){
+  .weather-dashboard{padding-top:calc(var(--sticky-h,330px) + 10px)!important}
+  .weather-card-single{border-radius:18px!important}
+  .weather-card-single p{font-size:.8rem!important}
+  .expense-hero-dino{width:126px;height:158px;right:-4px;top:72px}
+}
