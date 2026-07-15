@@ -1,6 +1,6 @@
 # Dino's Singapore Adventure
 
-小暴龍的新加坡冒險日記。此版本保留原專案的行程、預算、MRT、Google Maps、GAS 同步、加密資訊、記帳與全部圖片，並完成品牌化 UI、RWD 與 PWA 基礎支援。
+小暴龍的新加坡冒險日記。此版本保留原專案的行程、預算、MRT、Google Maps、GAS 同步、加密資訊、記帳與全部圖片，並完成品牌化 UI、手機優先導覽、情境小恐龍角色、RWD 與 PWA 基礎支援。
 
 ## 部署到 GitHub Pages
 
@@ -19,6 +19,15 @@
 - `manifest.webmanifest`、`sw.js`：PWA
 - `images/`：原始圖片，完整保留
 - `assets/dino/`：小暴龍品牌資產
+
+## 小恐龍角色資產
+
+- `dino-hero-camera.png`：首頁 Hero / 探索出發
+- `dino-map-guide.png`：今日亮點 / 行程導覽
+- `dino-budget-wallet.png`：預算總覽 / 記帳頁
+- `dino-mrt-card.png`：地鐵圖 / 交通提醒
+- `dino-private-lock.png`：加密旅遊資訊
+- `dino-heat-drink.png`：天氣與避暑提醒
 
 ## 注意
 

@@ -21,28 +21,9 @@
 })();
 
 (function(){
-  const tripDays={
-    '2026-07-22':{day:'Day 1',main:'星耀樟宜、牛車水、濱海灣',detail:'從清晨南洋早餐開始冒險。',tip:'抵達後先補充水分，下午戶外行程注意防曬。'},
-    '2026-07-23':{day:'Day 2',main:'新加坡環球影城',detail:'全天探索熱門設施與園區美食。',tip:'提早入園，先玩排隊時間最長的熱門設施。'},
-    '2026-07-24':{day:'Day 3',main:'濱海灣金沙、返程',detail:'把握最後半天，預留時間前往機場。',tip:'出發前再次確認護照、行李與航班時間。'}
-  };
-  const fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Singapore',year:'numeric',month:'2-digit',day:'2-digit'});
-  const today=fmt.format(new Date());
-  const start='2026-07-22', end='2026-07-24';
-  let info=tripDays[today];
-  if(!info){
-    if(today<start){
-      const days=Math.ceil((new Date(start+'T00:00:00+08:00')-new Date())/86400000);
-      info={day:'行前準備',main:`距離出發還有 ${Math.max(0,days)} 天`,detail:'行程將在旅遊日期自動切換。',tip:'先確認護照、網路、保險與行李清單。'};
-    }else{
-      info={day:'旅程完成',main:'新加坡三天兩夜已完成',detail:'可以回顧行程與記帳紀錄。',tip:'記得整理照片與核對最後支出。'};
-    }
+  if(typeof window.updateTripSummary==='function'){
+    window.updateTripSummary(document.body.getAttribute('data-active-panel')||'d1');
   }
-  const title=document.getElementById('highlight-title');
-  if(title) title.textContent='今日亮點 · '+info.day;
-  const main=document.getElementById('highlight-main'); if(main) main.textContent=info.main;
-  const detail=document.getElementById('highlight-detail'); if(detail) detail.textContent=info.detail;
-  const tip=document.getElementById('dino-tip'); if(tip) tip.textContent=info.tip;
 
   const budgetTotal=21360;
   let spent=0, hasCache=false;

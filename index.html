@@ -253,7 +253,7 @@
 <link rel="icon" href="assets/dino/dino-transparent.png" type="image/png">
 <link rel="stylesheet" href="css/modern.css">
 </head>
-<body class="page-index">
+<body class="page-index" data-active-panel="d1">
 
 <div class="sticky-top">
 <div class="hero">
@@ -297,14 +297,45 @@
 </div>
 </div>
 
-<section class="adventure-dashboard weather-dashboard" aria-label="新加坡即時天氣">
-  <article class="dash-card weather-card weather-card-single">
-    <div class="dash-kicker">新加坡即時天氣</div>
-    <div class="weather-inline">
-      <div class="dash-main" id="weather-main">讀取中…</div>
-      <p id="weather-detail">正在取得最新天氣資料。</p>
-    </div>
-  </article>
+<section class="adventure-dashboard trip-summary" aria-label="今日摘要">
+  <div class="summary-strip">
+    <article class="summary-card summary-weather">
+      <div class="summary-icon">☀️</div>
+      <div>
+        <div class="summary-label">新加坡天氣</div>
+        <div class="summary-main" id="weather-main">讀取中…</div>
+        <p id="weather-detail">正在取得最新天氣資料。</p>
+      </div>
+    </article>
+
+    <article class="summary-card summary-highlight">
+      <div class="summary-icon">⭐</div>
+      <div>
+        <div class="summary-label" id="highlight-title">今日亮點</div>
+        <div class="summary-main" id="highlight-main">行程準備中</div>
+        <p id="highlight-detail">切換 Day 後快速查看今日主軸。</p>
+      </div>
+      <img class="summary-dino" src="assets/dino/dino-map-guide.png" alt="" aria-hidden="true">
+    </article>
+
+    <button class="summary-card summary-budget" type="button" onclick="switchTab('budget')">
+      <div class="summary-icon">💰</div>
+      <div>
+        <div class="summary-label">預算狀態</div>
+        <div class="summary-main" id="budget-spent">預估 NT$ 21,360</div>
+        <p id="budget-detail">點一下看完整預算。</p>
+      </div>
+      <img class="summary-dino" src="assets/dino/dino-budget-wallet.png" alt="" aria-hidden="true">
+    </button>
+
+    <article class="summary-card summary-reminder">
+      <div>
+        <div class="summary-label">小暴龍提醒</div>
+        <div class="summary-main" id="dino-tip">先看今日時間軸，再決定要不要展開細節。</div>
+      </div>
+      <img src="assets/dino/dino-heat-drink.png" alt="" aria-hidden="true">
+    </article>
+  </div>
 </section>
 
 <div class="tab-content">
@@ -317,6 +348,7 @@
         <div class="day-date">7/22 (三) — Day 1</div>
         <div class="day-tagline">抵達 → 牛車水 → 濱海灣 → 入住</div>
       </div>
+      <img class="day-dino" src="assets/dino/dino-map-guide.png" alt="" aria-hidden="true">
     </div>
     <div class="timeline">
 
@@ -527,6 +559,7 @@
         <div class="day-date">7/23 (四) — Day 2</div>
         <div class="day-tagline">環球影城全日 → 淡濱尼晚餐</div>
       </div>
+      <img class="day-dino" src="assets/dino/dino-hero-camera.png" alt="" aria-hidden="true">
     </div>
     <div class="timeline">
 
@@ -630,6 +663,7 @@
         <div class="day-date">7/24 (五) — Day 3</div>
         <div class="day-tagline">退房 → 雨漩渦補拍 → 返台</div>
       </div>
+      <img class="day-dino" src="assets/dino/dino-mrt-card.png" alt="" aria-hidden="true">
     </div>
     <div class="timeline">
 
@@ -675,6 +709,13 @@
 
   <!-- Budget -->
   <div class="panel" id="panel-budget">
+    <div class="panel-dino-hero budget-dino-hero">
+      <div>
+        <div class="panel-dino-kicker">小暴龍會計</div>
+        <div class="panel-dino-title">先抓大項支出，再保留彈性零用金。</div>
+      </div>
+      <img src="assets/dino/dino-budget-wallet.png" alt="" aria-hidden="true">
+    </div>
     <div class="budget-card">
       <div class="budget-head-bar">
         <div class="budget-head-title">💰 預算總覽</div>
@@ -751,9 +792,13 @@
 
   <!-- Metro Map -->
   <div class="panel" id="panel-map">
-    <div style="margin-bottom:0.75rem;">
-      <div style="font-size:0.9rem;font-weight:600;color:var(--text-primary);margin-bottom:0.2rem;">新加坡地鐵路線圖</div>
-      <div style="font-size:0.75rem;color:var(--text-secondary);">點擊圖片可全螢幕放大檢視</div>
+    <div class="panel-dino-hero mrt-dino-hero">
+      <div>
+        <div class="panel-dino-kicker">小暴龍帶路</div>
+        <div class="panel-dino-title">地鐵圖可點擊放大，先認主要轉乘線就好。</div>
+        <div class="panel-dino-note">英文版看全線，中文版看景點標示。</div>
+      </div>
+      <img src="assets/dino/dino-mrt-card.png" alt="" aria-hidden="true">
     </div>
 
     <div class="mrt-card" onclick="openMrtModal('images/Singapore_MRT_System_Map.webp','英文版 · 高解析度')">
@@ -792,7 +837,7 @@
 
   <div class="panel" id="panel-private">
     <div class="lock-screen" id="lock-screen">
-      <div class="lock-icon">🔒</div>
+      <img class="lock-dino" src="assets/dino/dino-private-lock.png" alt="" aria-hidden="true">
       <div class="lock-title">旅遊資訊</div>
       <div class="lock-sub">此頁面已加密保護<br>請輸入密碼解鎖</div>
       <div class="lock-input-wrap">
@@ -844,6 +889,8 @@ function switchTab(id) {
   var map = { d1: 0, d2: 1, d3: 2, budget: 3, map: 4, private: 5 };
   document.querySelectorAll('.tab-btn')[map[id]].classList.add('active');
   document.getElementById('panel-' + id).classList.add('active');
+  document.body.setAttribute('data-active-panel', id);
+  updateTripSummary(id);
   window.scrollTo({ top: 0, behavior: 'instant' });
   if (id === 'private' && _unlocked) {
     document.getElementById('lock-screen').style.display = 'none';
@@ -856,6 +903,39 @@ function switchTab(id) {
 }
 
 var _budgetChartInitialized = false;
+var TRIP_SUMMARY = {
+  d1: {
+    title: '今日亮點 · Day 1',
+    main: '星耀樟宜、牛車水、濱海灣',
+    detail: '清晨抵達後先補早餐，下午避開最熱時段。',
+    tip: '先看 05:20 抵達到 21:30 入住的時間軸，行李寄存和 Grab 是今天關鍵。'
+  },
+  d2: {
+    title: '今日亮點 · Day 2',
+    main: '新加坡環球影城全日',
+    detail: '重點是保留體力，交通以直達與少換乘優先。',
+    tip: '入園先衝熱門設施，回程再依體力決定 MRT 或 Grab。'
+  },
+  d3: {
+    title: '今日亮點 · Day 3',
+    main: '退房、雨漩渦補拍、返台',
+    detail: '行程短但要留足機場與通關緩衝。',
+    tip: '10:00 前完成通關最安心，補拍瀑布後就準備登機。'
+  }
+};
+
+function updateTripSummary(id) {
+  var data = TRIP_SUMMARY[id];
+  if (!data) return;
+  var title = document.getElementById('highlight-title');
+  var main = document.getElementById('highlight-main');
+  var detail = document.getElementById('highlight-detail');
+  var tip = document.getElementById('dino-tip');
+  if (title) title.textContent = data.title;
+  if (main) main.textContent = data.main;
+  if (detail) detail.textContent = data.detail;
+  if (tip) tip.textContent = data.tip;
+}
 
 function openMrtModal(src, label) {
   document.getElementById('mrtModalImg').src = src;
