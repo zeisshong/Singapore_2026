@@ -253,7 +253,7 @@
 <link rel="icon" href="assets/dino/dino-transparent.png" type="image/png">
 <link rel="stylesheet" href="css/modern.css">
 </head>
-<body class="page-index">
+<body class="page-index" data-active-panel="d1">
 
 <div class="sticky-top">
 <div class="hero">
@@ -297,14 +297,43 @@
 </div>
 </div>
 
-<section class="adventure-dashboard weather-dashboard" aria-label="新加坡即時天氣">
-  <article class="dash-card weather-card weather-card-single">
-    <div class="dash-kicker">新加坡即時天氣</div>
-    <div class="weather-inline">
-      <div class="dash-main" id="weather-main">讀取中…</div>
-      <p id="weather-detail">正在取得最新天氣資料。</p>
-    </div>
-  </article>
+<section class="adventure-dashboard trip-summary" aria-label="今日摘要">
+  <div class="summary-strip">
+    <article class="summary-card summary-weather">
+      <div class="summary-icon">☀️</div>
+      <div>
+        <div class="summary-label">新加坡天氣</div>
+        <div class="summary-main" id="weather-main">讀取中…</div>
+        <p id="weather-detail">正在取得最新天氣資料。</p>
+      </div>
+    </article>
+
+    <article class="summary-card summary-highlight">
+      <div class="summary-icon">⭐</div>
+      <div>
+        <div class="summary-label" id="highlight-title">今日亮點</div>
+        <div class="summary-main" id="highlight-main">行程準備中</div>
+        <p id="highlight-detail">切換 Day 後快速查看今日主軸。</p>
+      </div>
+    </article>
+
+    <button class="summary-card summary-budget" type="button" onclick="switchTab('budget')">
+      <div class="summary-icon">💰</div>
+      <div>
+        <div class="summary-label">預算狀態</div>
+        <div class="summary-main" id="budget-spent">預估 NT$ 21,360</div>
+        <p id="budget-detail">點一下看完整預算。</p>
+      </div>
+    </button>
+
+    <article class="summary-card summary-reminder">
+      <div>
+        <div class="summary-label">小暴龍提醒</div>
+        <div class="summary-main" id="dino-tip">先看今日時間軸，再決定要不要展開細節。</div>
+      </div>
+      <img src="assets/dino/dino-transparent.png" alt="" aria-hidden="true">
+    </article>
+  </div>
 </section>
 
 <div class="tab-content">
@@ -844,6 +873,8 @@ function switchTab(id) {
   var map = { d1: 0, d2: 1, d3: 2, budget: 3, map: 4, private: 5 };
   document.querySelectorAll('.tab-btn')[map[id]].classList.add('active');
   document.getElementById('panel-' + id).classList.add('active');
+  document.body.setAttribute('data-active-panel', id);
+  updateTripSummary(id);
   window.scrollTo({ top: 0, behavior: 'instant' });
   if (id === 'private' && _unlocked) {
     document.getElementById('lock-screen').style.display = 'none';
@@ -856,6 +887,39 @@ function switchTab(id) {
 }
 
 var _budgetChartInitialized = false;
+var TRIP_SUMMARY = {
+  d1: {
+    title: '今日亮點 · Day 1',
+    main: '星耀樟宜、牛車水、濱海灣',
+    detail: '清晨抵達後先補早餐，下午避開最熱時段。',
+    tip: '先看 05:20 抵達到 21:30 入住的時間軸，行李寄存和 Grab 是今天關鍵。'
+  },
+  d2: {
+    title: '今日亮點 · Day 2',
+    main: '新加坡環球影城全日',
+    detail: '重點是保留體力，交通以直達與少換乘優先。',
+    tip: '入園先衝熱門設施，回程再依體力決定 MRT 或 Grab。'
+  },
+  d3: {
+    title: '今日亮點 · Day 3',
+    main: '退房、雨漩渦補拍、返台',
+    detail: '行程短但要留足機場與通關緩衝。',
+    tip: '10:00 前完成通關最安心，補拍瀑布後就準備登機。'
+  }
+};
+
+function updateTripSummary(id) {
+  var data = TRIP_SUMMARY[id];
+  if (!data) return;
+  var title = document.getElementById('highlight-title');
+  var main = document.getElementById('highlight-main');
+  var detail = document.getElementById('highlight-detail');
+  var tip = document.getElementById('dino-tip');
+  if (title) title.textContent = data.title;
+  if (main) main.textContent = data.main;
+  if (detail) detail.textContent = data.detail;
+  if (tip) tip.textContent = data.tip;
+}
 
 function openMrtModal(src, label) {
   document.getElementById('mrtModalImg').src = src;
