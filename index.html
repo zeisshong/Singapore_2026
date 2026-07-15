@@ -250,7 +250,7 @@
 <meta property="og:description" content="小暴龍的新加坡冒險日記">
 <meta property="og:type" content="website">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="assets/dino/dino-guide.svg" type="image/svg+xml">
+<link rel="icon" href="assets/dino/dino-reference.png" type="image/png">
 <link rel="stylesheet" href="css/modern.css">
 </head>
 <body>
@@ -298,6 +298,23 @@
   </button>
 </div>
 </div>
+
+<section class="adventure-dashboard" aria-label="旅行快速資訊">
+  <div class="quick-actions">
+    <a href="#" onclick="switchTab('d1');return false"><span>🗓️</span>行程總覽</a>
+    <a href="#" onclick="switchTab('budget');return false"><span>👛</span>預算總覽</a>
+    <a href="singapore_expense_2026.html"><span>🧾</span>記帳系統</a>
+    <a href="#" onclick="switchTab('map');return false"><span>🚇</span>MRT 地圖</a>
+    <a href="https://maps.google.com" target="_blank" rel="noopener"><span>📍</span>Google Maps</a>
+    <a href="#" onclick="switchTab('private');return false"><span>🔒</span>旅遊資訊</a>
+  </div>
+  <div class="dashboard-grid">
+    <article class="dash-card weather-card"><div class="dash-kicker">新加坡天氣</div><div class="dash-main">☀️ <strong>31°C</strong></div><p>多雲時晴，記得補充水分。</p></article>
+    <article class="dash-card"><div class="dash-kicker">今日亮點 · Day 1</div><strong>星耀樟宜、牛車水、濱海灣</strong><p>從清晨南洋早餐開始冒險。</p></article>
+    <article class="dash-card"><div class="dash-kicker">預算概覽</div><div class="dash-main"><strong>NT$ 21,360</strong></div><p>點擊查看完整分類與圓餅圖。</p></article>
+    <article class="dash-card dino-tip-card"><div><div class="dash-kicker">小暴龍提醒</div><strong>先玩熱門景點，下午記得避暑！</strong></div><img src="assets/dino/dino-reference.png" alt="小暴龍導遊"></article>
+  </div>
+</section>
 
 <div class="tab-content">
 
