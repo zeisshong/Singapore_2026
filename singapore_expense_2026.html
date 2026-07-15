@@ -129,15 +129,12 @@
   .pill.selected { background: var(--teal-light); color: #fff; border-color: var(--teal-light); }
 
   .receipt-box { border: 1.5px dashed var(--border); border-radius: var(--radius); padding: 1rem; text-align: center; margin-bottom: 0.9rem; background: linear-gradient(180deg, #fff, var(--surface-2)); }
-  .receipt-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
-  .receipt-action { min-height: 3.6rem; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.18rem; font-weight: 700; }
+  .receipt-actions { display: grid; grid-template-columns: 1fr; gap: 0.55rem; }
+  .receipt-action { min-height: 3.8rem; display: flex; align-items: center; justify-content: center; gap: 0.45rem; font-weight: 700; }
   .receipt-action span { font-size: 1.15rem; line-height: 1; }
   .receipt-action small { font-size: 0.68rem; font-weight: 500; color: var(--text-hint); }
   .receipt-preview { max-width: 100%; max-height: 12rem; border-radius: var(--radius-sm); margin-bottom: 0.6rem; border: 0.5px solid var(--border); }
-  .camera-panel { display: none; margin-top: 0.75rem; padding: 0.75rem; border-radius: var(--radius); background: #111; }
-  .camera-panel.active { display: block; }
-  .camera-video { display: block; width: 100%; max-height: 18rem; object-fit: cover; border-radius: var(--radius-sm); background: #000; }
-  .camera-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.65rem; }
+  .receipt-preview-actions { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
   .btn { padding: 0.55rem 1rem; border-radius: var(--radius-sm); border: none; font-size: 0.82rem; font-family: var(--font); cursor: pointer; }
   .btn-outline { background: var(--surface-2); color: var(--text-primary); border: 0.5px solid var(--border); }
   .btn-primary { background: var(--teal-dark); color: #fff; }
@@ -148,8 +145,7 @@
     color: #fff; padding: 0.55rem 1.1rem; border-radius: 20px; font-size: 0.8rem; z-index: 1000; display: none; }
   @media (max-width: 520px) {
     .form-row { flex-direction: column; gap: 0.85rem; }
-    .receipt-actions { grid-template-columns: 1fr; }
-    .receipt-action { min-height: 3.2rem; flex-direction: row; }
+    .receipt-action { min-height: 3.2rem; }
   }
 </style>
 <meta name="theme-color" content="#1F8A70">
@@ -237,37 +233,12 @@
 
     <div class="receipt-box" id="receiptBox">
       <div id="receiptPreviewWrap"></div>
-      <input type="file" id="receiptInputCamera" accept="image/*" capture="environment" style="display:none;" onchange="onReceiptSelected(event, 'camera')">
-      <input type="file" id="receiptInputGallery" accept="image/jpeg,image/png,image/heic,image/heif,image/webp" style="display:none;" onchange="onReceiptSelected(event, 'gallery')">
+      <input type="file" id="receiptInput" accept="image/*" style="display:none;" onchange="onReceiptSelected(event)">
       <div class="receipt-actions">
-        <button type="button" class="btn btn-outline receipt-action" onclick="openCameraCapture()"><span>📷</span>開啟相機拍照<small>即時收據</small></button>
-        <button type="button" class="btn btn-outline receipt-action" onclick="document.getElementById('receiptInputGallery').click()"><span>🖼</span>上傳照片<small>相機膠卷</small></button>
-      </div>
-      <div class="camera-panel" id="cameraPanel">
-        <video class="camera-video" id="cameraVideo" autoplay muted playsinline></video>
-        <canvas id="cameraCanvas" style="display:none;"></canvas>
-        <div class="camera-actions">
-          <button type="button" class="btn btn-primary" onclick="captureCameraFrame()">拍下收據</button>
-          <button type="button" class="btn btn-outline" onclick="closeCameraCapture()">取消</button>
-        </div>
+        <button type="button" class="btn btn-outline receipt-action" onclick="document.getElementById('receiptInput').click()"><span>📸</span>上傳 / 拍攝收據<small>照片圖庫或相機</small></button>
       </div>
       <button type="button" class="btn btn-primary" id="parseBtn" style="display:none;margin-top:0.6rem;" onclick="parseReceipt()">🔍 解析收據</button>
       <div id="parseStatus" style="font-size:0.75rem;color:var(--text-hint);margin-top:0.5rem;"></div>
-    </div>
-
-    <div class="form-group form-row">
-      <div>
-        <label class="form-label">金額</label>
-        <input class="form-input" id="fAmount" type="number" inputmode="decimal" placeholder="0">
-      </div>
-      <div>
-        <label class="form-label">幣別</label>
-        <div class="pill-group" id="currencyPills">
-          <button type="button" class="pill selected" data-val="SGD" onclick="selectPill(this,'currency')">S$ SGD</button>
-          <button type="button" class="pill" data-val="TWD" onclick="selectPill(this,'currency')">NT$ TWD</button>
-          <button type="button" class="pill" data-val="USD" onclick="selectPill(this,'currency')">$ USD</button>
-        </div>
-      </div>
     </div>
 
     <div class="form-group">
@@ -300,6 +271,21 @@
     <div class="form-group">
       <label class="form-label">說明</label>
       <input class="form-input" id="fDescription" placeholder="例如：晚餐、早餐、車資">
+    </div>
+
+    <div class="form-group form-row">
+      <div>
+        <label class="form-label">金額</label>
+        <input class="form-input" id="fAmount" type="number" inputmode="decimal" placeholder="0">
+      </div>
+      <div>
+        <label class="form-label">幣別</label>
+        <div class="pill-group" id="currencyPills">
+          <button type="button" class="pill selected" data-val="SGD" onclick="selectPill(this,'currency')">S$ SGD</button>
+          <button type="button" class="pill" data-val="TWD" onclick="selectPill(this,'currency')">NT$ TWD</button>
+          <button type="button" class="pill" data-val="USD" onclick="selectPill(this,'currency')">$ USD</button>
+        </div>
+      </div>
     </div>
 
     <div class="form-group">
@@ -376,85 +362,43 @@
     document.getElementById('receiptPreviewWrap').innerHTML = '';
     document.getElementById('parseBtn').style.display = 'none';
     document.getElementById('parseStatus').textContent = '';
-    document.getElementById('receiptInputCamera').value = '';
-    document.getElementById('receiptInputGallery').value = '';
-    closeCameraCapture();
+    document.getElementById('receiptInput').value = '';
     receiptBase64 = null;
     receiptMediaType = null;
   }
 
   let receiptBase64 = null;
   let receiptMediaType = null;
-  let cameraStream = null;
 
-  function setReceiptImage(dataUrl, source) {
+  function setReceiptImage(dataUrl) {
     receiptBase64 = dataUrl.split(',')[1];
     receiptMediaType = (dataUrl.match(/^data:([^;]+);/) || [])[1] || 'image/jpeg';
     document.getElementById('receiptPreviewWrap').innerHTML =
-      '<img class="receipt-preview" src="' + dataUrl + '" alt="收據預覽">';
+      '<img class="receipt-preview" src="' + dataUrl + '" alt="收據預覽">' +
+      '<div class="receipt-preview-actions">' +
+      '<button type="button" class="btn btn-outline" onclick="clearReceipt()">✕ 清除照片</button>' +
+      '<button type="button" class="btn btn-outline" onclick="document.getElementById(\'receiptInput\').click()">← 重新上傳</button>' +
+      '</div>';
     document.getElementById('parseBtn').style.display = 'inline-block';
-    document.getElementById('parseStatus').textContent = source === 'camera' ? '已拍下收據' : '已加入相簿照片';
+    document.getElementById('parseStatus').textContent = '已加入收據照片';
   }
 
-  async function openCameraCapture() {
-    const statusEl = document.getElementById('parseStatus');
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      statusEl.textContent = '此瀏覽器不支援即時相機，改用系統拍照。';
-      document.getElementById('receiptInputCamera').click();
-      return;
-    }
-    try {
-      closeCameraCapture();
-      cameraStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' } },
-        audio: false
-      });
-      const video = document.getElementById('cameraVideo');
-      video.srcObject = cameraStream;
-      document.getElementById('cameraPanel').classList.add('active');
-      statusEl.textContent = '相機已開啟，對準收據後拍下。';
-    } catch (err) {
-      statusEl.textContent = '無法開啟即時相機，改用系統拍照。';
-      document.getElementById('receiptInputCamera').click();
-    }
+  function clearReceipt() {
+    document.getElementById('receiptPreviewWrap').innerHTML = '';
+    document.getElementById('parseBtn').style.display = 'none';
+    document.getElementById('parseStatus').textContent = '';
+    document.getElementById('receiptInput').value = '';
+    receiptBase64 = null;
+    receiptMediaType = null;
   }
 
-  function closeCameraCapture() {
-    if (cameraStream) {
-      cameraStream.getTracks().forEach(track => track.stop());
-      cameraStream = null;
-    }
-    const video = document.getElementById('cameraVideo');
-    if (video) video.srcObject = null;
-    const panel = document.getElementById('cameraPanel');
-    if (panel) panel.classList.remove('active');
-  }
-
-  function captureCameraFrame() {
-    const video = document.getElementById('cameraVideo');
-    if (!video || !video.videoWidth) {
-      document.getElementById('parseStatus').textContent = '相機尚未準備好，請稍候再拍。';
-      return;
-    }
-    const canvas = document.getElementById('cameraCanvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-    setReceiptImage(canvas.toDataURL('image/jpeg', 0.88), 'camera');
-    closeCameraCapture();
-    document.getElementById('receiptInputGallery').value = '';
-    document.getElementById('receiptInputCamera').value = '';
-  }
-
-  function onReceiptSelected(evt, source) {
+  function onReceiptSelected(evt) {
     const file = evt.target.files[0];
     if (!file) return;
-    if (source === 'camera') document.getElementById('receiptInputGallery').value = '';
-    if (source === 'gallery') document.getElementById('receiptInputCamera').value = '';
     receiptMediaType = file.type || 'image/jpeg';
     const reader = new FileReader();
     reader.onload = function(e) {
-      setReceiptImage(e.target.result, source);
+      setReceiptImage(e.target.result);
     };
     reader.readAsDataURL(file);
   }
