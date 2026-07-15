@@ -134,6 +134,10 @@
   .receipt-action span { font-size: 1.15rem; line-height: 1; }
   .receipt-action small { font-size: 0.68rem; font-weight: 500; color: var(--text-hint); }
   .receipt-preview { max-width: 100%; max-height: 12rem; border-radius: var(--radius-sm); margin-bottom: 0.6rem; border: 0.5px solid var(--border); }
+  .camera-panel { display: none; margin-top: 0.75rem; padding: 0.75rem; border-radius: var(--radius); background: #111; }
+  .camera-panel.active { display: block; }
+  .camera-video { display: block; width: 100%; max-height: 18rem; object-fit: cover; border-radius: var(--radius-sm); background: #000; }
+  .camera-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.65rem; }
   .btn { padding: 0.55rem 1rem; border-radius: var(--radius-sm); border: none; font-size: 0.82rem; font-family: var(--font); cursor: pointer; }
   .btn-outline { background: var(--surface-2); color: var(--text-primary); border: 0.5px solid var(--border); }
   .btn-primary { background: var(--teal-dark); color: #fff; }
@@ -236,8 +240,16 @@
       <input type="file" id="receiptInputCamera" accept="image/*" capture="environment" style="display:none;" onchange="onReceiptSelected(event, 'camera')">
       <input type="file" id="receiptInputGallery" accept="image/jpeg,image/png,image/heic,image/heif,image/webp" style="display:none;" onchange="onReceiptSelected(event, 'gallery')">
       <div class="receipt-actions">
-        <button type="button" class="btn btn-outline receipt-action" onclick="document.getElementById('receiptInputCamera').click()"><span>📷</span>開啟相機拍照<small>即時收據</small></button>
+        <button type="button" class="btn btn-outline receipt-action" onclick="openCameraCapture()"><span>📷</span>開啟相機拍照<small>即時收據</small></button>
         <button type="button" class="btn btn-outline receipt-action" onclick="document.getElementById('receiptInputGallery').click()"><span>🖼</span>上傳照片<small>相機膠卷</small></button>
+      </div>
+      <div class="camera-panel" id="cameraPanel">
+        <video class="camera-video" id="cameraVideo" autoplay muted playsinline></video>
+        <canvas id="cameraCanvas" style="display:none;"></canvas>
+        <div class="camera-actions">
+          <button type="button" class="btn btn-primary" onclick="captureCameraFrame()">拍下收據</button>
+          <button type="button" class="btn btn-outline" onclick="closeCameraCapture()">取消</button>
+        </div>
       </div>
       <button type="button" class="btn btn-primary" id="parseBtn" style="display:none;margin-top:0.6rem;" onclick="parseReceipt()">🔍 解析收據</button>
       <div id="parseStatus" style="font-size:0.75rem;color:var(--text-hint);margin-top:0.5rem;"></div>
@@ -366,12 +378,73 @@
     document.getElementById('parseStatus').textContent = '';
     document.getElementById('receiptInputCamera').value = '';
     document.getElementById('receiptInputGallery').value = '';
+    closeCameraCapture();
     receiptBase64 = null;
     receiptMediaType = null;
   }
 
   let receiptBase64 = null;
   let receiptMediaType = null;
+  let cameraStream = null;
+
+  function setReceiptImage(dataUrl, source) {
+    receiptBase64 = dataUrl.split(',')[1];
+    receiptMediaType = (dataUrl.match(/^data:([^;]+);/) || [])[1] || 'image/jpeg';
+    document.getElementById('receiptPreviewWrap').innerHTML =
+      '<img class="receipt-preview" src="' + dataUrl + '" alt="收據預覽">';
+    document.getElementById('parseBtn').style.display = 'inline-block';
+    document.getElementById('parseStatus').textContent = source === 'camera' ? '已拍下收據' : '已加入相簿照片';
+  }
+
+  async function openCameraCapture() {
+    const statusEl = document.getElementById('parseStatus');
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      statusEl.textContent = '此瀏覽器不支援即時相機，改用系統拍照。';
+      document.getElementById('receiptInputCamera').click();
+      return;
+    }
+    try {
+      closeCameraCapture();
+      cameraStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' } },
+        audio: false
+      });
+      const video = document.getElementById('cameraVideo');
+      video.srcObject = cameraStream;
+      document.getElementById('cameraPanel').classList.add('active');
+      statusEl.textContent = '相機已開啟，對準收據後拍下。';
+    } catch (err) {
+      statusEl.textContent = '無法開啟即時相機，改用系統拍照。';
+      document.getElementById('receiptInputCamera').click();
+    }
+  }
+
+  function closeCameraCapture() {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      cameraStream = null;
+    }
+    const video = document.getElementById('cameraVideo');
+    if (video) video.srcObject = null;
+    const panel = document.getElementById('cameraPanel');
+    if (panel) panel.classList.remove('active');
+  }
+
+  function captureCameraFrame() {
+    const video = document.getElementById('cameraVideo');
+    if (!video || !video.videoWidth) {
+      document.getElementById('parseStatus').textContent = '相機尚未準備好，請稍候再拍。';
+      return;
+    }
+    const canvas = document.getElementById('cameraCanvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    setReceiptImage(canvas.toDataURL('image/jpeg', 0.88), 'camera');
+    closeCameraCapture();
+    document.getElementById('receiptInputGallery').value = '';
+    document.getElementById('receiptInputCamera').value = '';
+  }
 
   function onReceiptSelected(evt, source) {
     const file = evt.target.files[0];
@@ -381,12 +454,7 @@
     receiptMediaType = file.type || 'image/jpeg';
     const reader = new FileReader();
     reader.onload = function(e) {
-      const dataUrl = e.target.result;
-      receiptBase64 = dataUrl.split(',')[1];
-      document.getElementById('receiptPreviewWrap').innerHTML =
-        '<img class="receipt-preview" src="' + dataUrl + '" alt="收據預覽">';
-      document.getElementById('parseBtn').style.display = 'inline-block';
-      document.getElementById('parseStatus').textContent = source === 'camera' ? '已加入拍照收據' : '已加入相簿照片';
+      setReceiptImage(e.target.result, source);
     };
     reader.readAsDataURL(file);
   }

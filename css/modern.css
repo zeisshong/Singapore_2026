@@ -125,6 +125,9 @@ body{font-size:var(--font-size-body)!important;line-height:var(--line-height-bod
 .page-expense .receipt-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .page-expense .receipt-action{border-radius:16px!important;min-height:66px!important}
 .page-expense .receipt-action span{font-size:1.2rem}
+.page-expense .camera-panel{border-radius:18px!important}
+.page-expense .camera-video{aspect-ratio:4/3}
+.page-expense .camera-actions .btn-outline{background:rgba(255,255,255,.12)!important;color:#fff!important;border-color:rgba(255,255,255,.2)!important}
 .page-expense .expense-meta .chip{background:#eef7f2!important;color:#175f52!important;border:1px solid rgba(31,138,112,.16)!important}
 .page-expense .expense-top>div:last-child{text-align:right;flex-shrink:0}
 @media(max-width:760px){
