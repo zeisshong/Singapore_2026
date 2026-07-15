@@ -128,8 +128,12 @@
     font-size: 0.78rem; cursor: pointer; color: var(--text-secondary); }
   .pill.selected { background: var(--teal-light); color: #fff; border-color: var(--teal-light); }
 
-  .receipt-box { border: 1.5px dashed var(--border); border-radius: var(--radius); padding: 1rem; text-align: center; margin-bottom: 0.9rem; }
-  .receipt-preview { max-width: 100%; max-height: 12rem; border-radius: var(--radius-sm); margin-bottom: 0.6rem; }
+  .receipt-box { border: 1.5px dashed var(--border); border-radius: var(--radius); padding: 1rem; text-align: center; margin-bottom: 0.9rem; background: linear-gradient(180deg, #fff, var(--surface-2)); }
+  .receipt-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+  .receipt-action { min-height: 3.6rem; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.18rem; font-weight: 700; }
+  .receipt-action span { font-size: 1.15rem; line-height: 1; }
+  .receipt-action small { font-size: 0.68rem; font-weight: 500; color: var(--text-hint); }
+  .receipt-preview { max-width: 100%; max-height: 12rem; border-radius: var(--radius-sm); margin-bottom: 0.6rem; border: 0.5px solid var(--border); }
   .btn { padding: 0.55rem 1rem; border-radius: var(--radius-sm); border: none; font-size: 0.82rem; font-family: var(--font); cursor: pointer; }
   .btn-outline { background: var(--surface-2); color: var(--text-primary); border: 0.5px solid var(--border); }
   .btn-primary { background: var(--teal-dark); color: #fff; }
@@ -138,6 +142,11 @@
 
   .toast { position: fixed; bottom: 6rem; left: 50%; transform: translateX(-50%); background: rgba(20,20,20,0.9);
     color: #fff; padding: 0.55rem 1.1rem; border-radius: 20px; font-size: 0.8rem; z-index: 1000; display: none; }
+  @media (max-width: 520px) {
+    .form-row { flex-direction: column; gap: 0.85rem; }
+    .receipt-actions { grid-template-columns: 1fr; }
+    .receipt-action { min-height: 3.2rem; flex-direction: row; }
+  }
 </style>
 <meta name="theme-color" content="#1F8A70">
 <meta name="description" content="Dino's Singapore Adventure｜小暴龍的新加坡冒險日記">
@@ -224,24 +233,14 @@
 
     <div class="receipt-box" id="receiptBox">
       <div id="receiptPreviewWrap"></div>
-      <input type="file" id="receiptInputCamera" accept="image/*" capture="environment" style="display:none;" onchange="onReceiptSelected(event)">
-      <input type="file" id="receiptInputGallery" accept="image/*" style="display:none;" onchange="onReceiptSelected(event)">
-      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-        <button class="btn btn-outline" onclick="document.getElementById('receiptInputCamera').click()">📷 拍照</button>
-        <button class="btn btn-outline" onclick="document.getElementById('receiptInputGallery').click()">🖼 從相簿選擇</button>
+      <input type="file" id="receiptInputCamera" accept="image/*" capture="environment" style="display:none;" onchange="onReceiptSelected(event, 'camera')">
+      <input type="file" id="receiptInputGallery" accept="image/jpeg,image/png,image/heic,image/heif,image/webp" style="display:none;" onchange="onReceiptSelected(event, 'gallery')">
+      <div class="receipt-actions">
+        <button type="button" class="btn btn-outline receipt-action" onclick="document.getElementById('receiptInputCamera').click()"><span>📷</span>開啟相機拍照<small>即時收據</small></button>
+        <button type="button" class="btn btn-outline receipt-action" onclick="document.getElementById('receiptInputGallery').click()"><span>🖼</span>上傳照片<small>相機膠卷</small></button>
       </div>
-      <button class="btn btn-primary" id="parseBtn" style="display:none;margin-top:0.5rem;" onclick="parseReceipt()">🔍 解析收據</button>
+      <button type="button" class="btn btn-primary" id="parseBtn" style="display:none;margin-top:0.6rem;" onclick="parseReceipt()">🔍 解析收據</button>
       <div id="parseStatus" style="font-size:0.75rem;color:var(--text-hint);margin-top:0.5rem;"></div>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">地點／店名</label>
-      <input class="form-input" id="fPlace" placeholder="例如：松發肉骨茶">
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">說明</label>
-      <input class="form-input" id="fDescription" placeholder="例如：晚餐">
     </div>
 
     <div class="form-group form-row">
@@ -253,22 +252,27 @@
         <label class="form-label">幣別</label>
         <div class="pill-group" id="currencyPills">
           <button type="button" class="pill selected" data-val="SGD" onclick="selectPill(this,'currency')">S$ SGD</button>
-          <button type="button" class="pill" data-val="USD" onclick="selectPill(this,'currency')">$ USD</button>
           <button type="button" class="pill" data-val="TWD" onclick="selectPill(this,'currency')">NT$ TWD</button>
+          <button type="button" class="pill" data-val="USD" onclick="selectPill(this,'currency')">$ USD</button>
         </div>
       </div>
     </div>
 
     <div class="form-group">
+      <label class="form-label">地點／店名</label>
+      <input class="form-input" id="fPlace" placeholder="例如：松發肉骨茶">
+    </div>
+
+    <div class="form-group">
       <label class="form-label">類別</label>
       <div class="pill-group" id="categoryPills">
-        <button type="button" class="pill selected" data-val="機票" onclick="selectPill(this,'category')">✈ 機票</button>
-        <button type="button" class="pill" data-val="住宿" onclick="selectPill(this,'category')">🏨 住宿</button>
-        <button type="button" class="pill" data-val="門票" onclick="selectPill(this,'category')">🎡 門票</button>
+        <button type="button" class="pill selected" data-val="餐飲" onclick="selectPill(this,'category')">🍜 餐飲</button>
         <button type="button" class="pill" data-val="交通" onclick="selectPill(this,'category')">🚗 交通</button>
-        <button type="button" class="pill" data-val="餐飲" onclick="selectPill(this,'category')">🍜 餐飲</button>
-        <button type="button" class="pill" data-val="保險/通訊" onclick="selectPill(this,'category')">🛡 保險/通訊</button>
         <button type="button" class="pill" data-val="購物/雜支" onclick="selectPill(this,'category')">🛍 購物/雜支</button>
+        <button type="button" class="pill" data-val="門票" onclick="selectPill(this,'category')">🎡 門票</button>
+        <button type="button" class="pill" data-val="住宿" onclick="selectPill(this,'category')">🏨 住宿</button>
+        <button type="button" class="pill" data-val="機票" onclick="selectPill(this,'category')">✈ 機票</button>
+        <button type="button" class="pill" data-val="保險/通訊" onclick="selectPill(this,'category')">🛡 保險/通訊</button>
       </div>
     </div>
 
@@ -282,12 +286,17 @@
     </div>
 
     <div class="form-group">
-      <label class="form-label">品項明細（選填）</label>
+      <label class="form-label">說明</label>
+      <input class="form-input" id="fDescription" placeholder="例如：晚餐、早餐、車資">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">品項明細</label>
       <textarea class="form-textarea" id="fItems" placeholder="例如：咖椰吐司 x2、Iced Milk Tea x2"></textarea>
     </div>
 
     <div class="form-group">
-      <label class="form-label">備註（選填）</label>
+      <label class="form-label">備註</label>
       <textarea class="form-textarea" id="fNote"></textarea>
     </div>
 
@@ -316,7 +325,7 @@
   const FX_RATE = { SGD: 24.8, USD: 32.1, TWD: 1 };
   const CURRENCY_SYMBOL = { SGD: 'S$', USD: '$', TWD: 'NT$' };
 
-  let selected = { currency: 'SGD', category: '機票', date: '7/22（三)' };
+  let selected = { currency: 'SGD', category: '餐飲', date: '7/22（三)' };
 
   function updateStickyHeight() {
     const el = document.querySelector('.sticky-top');
@@ -357,22 +366,27 @@
     document.getElementById('parseStatus').textContent = '';
     document.getElementById('receiptInputCamera').value = '';
     document.getElementById('receiptInputGallery').value = '';
+    receiptBase64 = null;
+    receiptMediaType = null;
   }
 
   let receiptBase64 = null;
   let receiptMediaType = null;
 
-  function onReceiptSelected(evt) {
+  function onReceiptSelected(evt, source) {
     const file = evt.target.files[0];
     if (!file) return;
+    if (source === 'camera') document.getElementById('receiptInputGallery').value = '';
+    if (source === 'gallery') document.getElementById('receiptInputCamera').value = '';
     receiptMediaType = file.type || 'image/jpeg';
     const reader = new FileReader();
     reader.onload = function(e) {
       const dataUrl = e.target.result;
       receiptBase64 = dataUrl.split(',')[1];
       document.getElementById('receiptPreviewWrap').innerHTML =
-        '<img class="receipt-preview" src="' + dataUrl + '">';
+        '<img class="receipt-preview" src="' + dataUrl + '" alt="收據預覽">';
       document.getElementById('parseBtn').style.display = 'inline-block';
+      document.getElementById('parseStatus').textContent = source === 'camera' ? '已加入拍照收據' : '已加入相簿照片';
     };
     reader.readAsDataURL(file);
   }
@@ -732,16 +746,22 @@
     emptyEl.style.display = 'none';
     listEl.innerHTML = allRows.slice().reverse().map(r => {
       const cur = r['幣別'] || 'TWD';
+      const amount = Number(r['金額']) || 0;
+      const twd = twdOf(r);
+      const category = r['類別'] || '';
+      const items = r['品項明細'] || r['品項'] || '';
       return '<div class="expense-item">' +
         '<div class="expense-top">' +
           '<div><div class="expense-place">' + (r['地點/店名'] || r['地點／店名'] || '') + '</div>' +
           '<div class="expense-desc">' + (r['說明'] || '') + '</div></div>' +
-          '<div class="expense-amt">' + (CURRENCY_SYMBOL[cur] || '') + (Number(r['金額'])||0).toLocaleString() + '</div>' +
+          '<div><div class="expense-amt">' + (CURRENCY_SYMBOL[cur] || '') + amount.toLocaleString() + '</div>' +
+          (cur !== 'TWD' ? '<div class="day-record-amt-sub">≈ NT$' + twd.toLocaleString() + '</div>' : '') + '</div>' +
         '</div>' +
         '<div class="expense-meta">' +
           '<span class="chip">' + (r['日期'] || '') + '</span>' +
-          '<span class="chip">' + (r['類別'] || '') + '</span>' +
+          '<span class="chip">' + ((CATEGORY_ICONS[category] || '') + ' ' + category).trim() + '</span>' +
         '</div>' +
+        (items ? '<div class="expense-desc" style="margin-top:0.4rem;">🧾 ' + items + '</div>' : '') +
         (r['備註'] ? '<div class="expense-desc" style="margin-top:0.4rem;">📝 ' + r['備註'] + '</div>' : '') +
         '<button class="expense-del" onclick="deleteExpense(' + r._row + ')">刪除</button>' +
       '</div>';

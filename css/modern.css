@@ -121,6 +121,12 @@ body{font-size:var(--font-size-body)!important;line-height:var(--line-height-bod
 .expense-hero-dino{position:absolute;z-index:2;right:3%;top:34px;width:220px;height:250px;object-fit:contain;filter:drop-shadow(0 16px 14px rgba(20,65,55,.18));pointer-events:none}
 .expense-back-link{position:absolute;z-index:3;left:24px;top:18px;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(31,138,112,.2);color:#175f52;text-decoration:none;font-size:.8rem;font-weight:800;box-shadow:0 6px 18px rgba(36,50,56,.08)}
 .page-expense .hero-eyebrow{margin-top:30px}
+.page-expense .receipt-box{border-color:var(--line)!important;background:linear-gradient(180deg,#fff,#f6fbf8)!important}
+.page-expense .receipt-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.page-expense .receipt-action{border-radius:16px!important;min-height:66px!important}
+.page-expense .receipt-action span{font-size:1.2rem}
+.page-expense .expense-meta .chip{background:#eef7f2!important;color:#175f52!important;border:1px solid rgba(31,138,112,.16)!important}
+.page-expense .expense-top>div:last-child{text-align:right;flex-shrink:0}
 @media(max-width:760px){
   .weather-card-single{display:block;padding:14px 16px!important}
   .weather-card-single .dash-kicker{margin-bottom:8px!important}
@@ -129,6 +135,8 @@ body{font-size:var(--font-size-body)!important;line-height:var(--line-height-bod
   .expense-hero-dino{width:150px;height:185px;right:-5px;top:58px}
   .expense-back-link{left:14px;top:12px;padding:6px 10px;font-size:.75rem}
   .page-expense .hero-eyebrow{margin-top:32px}
+  .page-expense .receipt-actions{grid-template-columns:1fr}
+  .page-expense .receipt-action{min-height:54px!important}
 }
 @media(max-width:460px){
   .weather-dashboard{padding-top:calc(var(--sticky-h,330px) + 10px)!important}
