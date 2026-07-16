@@ -517,3 +517,51 @@ body[data-active-panel="private"] .tab-content::before{content:"旅遊資訊"}
     height:82px;
   }
 }
+
+/* v8: illustrated Singapore hero background + stronger current compact tabs */
+.page-index .hero{
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.52) 34%,rgba(255,255,255,.12) 66%,rgba(255,255,255,.02) 100%),
+    url('../assets/hero/singapore-2026-hero.png') center center/cover no-repeat!important;
+}
+.page-index .hero:before{
+  display:none!important;
+}
+.page-index .hero:after{
+  background:url('../assets/dino/dino-hero-camera.png') center/contain no-repeat!important;
+}
+.page-index .tab-btn.active{
+  background:linear-gradient(135deg,#168fc8,#0b8f77)!important;
+  color:#fff!important;
+  border-color:rgba(255,255,255,.68)!important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.9),0 10px 24px rgba(0,72,92,.28)!important;
+}
+.page-index .tab-btn.active .tab-label,
+.page-index .tab-btn.active .tab-sub{
+  color:#fff!important;
+}
+.page-index .tab-btn.active .tab-sub{
+  opacity:.9;
+}
+.sticky-top.is-compact .tab-sub{
+  display:block!important;
+  font-size:.66rem!important;
+  line-height:1.1!important;
+  margin-top:1px;
+}
+.sticky-top.is-compact .tab-btn{
+  min-height:48px;
+}
+@media(max-width:760px){
+  .page-index .hero{
+    background-position:55% center!important;
+  }
+}
+@media(max-width:460px){
+  .page-index .hero{
+    background-position:60% center!important;
+  }
+  .sticky-top.is-compact .tab-sub{
+    font-size:.62rem!important;
+  }
+}
