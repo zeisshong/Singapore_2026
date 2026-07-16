@@ -524,7 +524,15 @@ body[data-active-panel="private"] .tab-content::before{content:"旅遊資訊"}
     linear-gradient(90deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.52) 34%,rgba(255,255,255,.12) 66%,rgba(255,255,255,.02) 100%),
     url('../assets/hero/singapore-2026-hero.png') center center/cover no-repeat!important;
 }
+.page-expense .hero{
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.52) 34%,rgba(255,255,255,.12) 66%,rgba(255,255,255,.02) 100%),
+    url('../assets/hero/singapore-2026-hero.png') center center/cover no-repeat!important;
+}
 .page-index .hero:before{
+  display:none!important;
+}
+.page-expense .hero:before{
   display:none!important;
 }
 .page-index .hero:after{
@@ -553,12 +561,14 @@ body[data-active-panel="private"] .tab-content::before{content:"旅遊資訊"}
   min-height:48px;
 }
 @media(max-width:760px){
-  .page-index .hero{
+  .page-index .hero,
+  .page-expense .hero{
     background-position:55% center!important;
   }
 }
 @media(max-width:460px){
-  .page-index .hero{
+  .page-index .hero,
+  .page-expense .hero{
     background-position:60% center!important;
   }
   .sticky-top.is-compact .tab-sub{
