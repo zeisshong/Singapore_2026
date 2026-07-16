@@ -13,7 +13,7 @@
     if(next!==compact){
       compact=next;
       top.classList.toggle('is-compact',compact);
-      requestAnimationFrame(()=>document.documentElement.style.setProperty('--sticky-h',top.offsetHeight+'px'));
+      document.body.classList.toggle('is-compact',compact);
     }
   };
   window.addEventListener('scroll',sync,{passive:true});

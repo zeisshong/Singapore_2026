@@ -177,6 +177,21 @@ body{font-size:var(--font-size-body)!important;line-height:var(--line-height-bod
 .trip-summary{
   padding:calc(var(--sticky-h,390px) + 14px) 16px 4px!important;
 }
+body[data-active-panel="budget"] .trip-summary,
+body[data-active-panel="map"] .trip-summary,
+body[data-active-panel="private"] .trip-summary{
+  display:none!important;
+}
+body[data-active-panel="budget"] .tab-content,
+body[data-active-panel="map"] .tab-content,
+body[data-active-panel="private"] .tab-content{
+  padding-top:calc(var(--sticky-h,390px) + 16px)!important;
+}
+body.is-compact[data-active-panel="budget"] .tab-content,
+body.is-compact[data-active-panel="map"] .tab-content,
+body.is-compact[data-active-panel="private"] .tab-content{
+  padding-top:92px!important;
+}
 .summary-strip{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
