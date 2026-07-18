@@ -834,6 +834,138 @@
     </div>
   </div>
 
+  <!-- Universal Studios Singapore Map -->
+ <div class="panel" id="panel-uss">
+   <div class="panel-dino-hero uss-dino-hero">
+     <div>
+       <div class="panel-dino-kicker">小暴龍帶路</div>
+       <div class="panel-dino-title">新加坡環球影城中文園區地圖</div>
+       <div class="panel-dino-note">
+         點擊地圖可全螢幕查看，手機與 iPad 可雙指縮放。
+       </div>
+     </div>
+ 
+     <img
+       src="assets/dino/dino-map-guide.png"
+       alt=""
+       aria-hidden="true"
+     >
+   </div>
+ 
+   <button
+     class="mrt-card uss-map-card"
+     type="button"
+     onclick="openMrtModal('images/uss-park-map.webp','新加坡環球影城中文園區地圖')"
+     aria-label="放大新加坡環球影城園區地圖"
+   >
+     <img
+       src="images/uss-park-map.webp"
+       alt="新加坡環球影城中文園區地圖"
+       class="mrt-thumb uss-map-thumb"
+       width="2400"
+       height="1697"
+       decoding="async"
+     >
+ 
+     <div class="mrt-card-label">
+       中文園區地圖
+       <span class="mrt-tap-hint">點擊放大</span>
+     </div>
+   </button>
+ 
+   <section class="uss-guide-card" aria-labelledby="uss-route-title">
+     <div class="uss-guide-heading">
+       <div>
+         <div class="uss-guide-kicker">推薦動線</div>
+         <h2 id="uss-route-title">入園後逆時針遊玩</h2>
+       </div>
+ 
+       <span class="uss-guide-time">約 6 小時</span>
+     </div>
+ 
+     <ol class="uss-route-list">
+       <li>
+         <span class="uss-route-number">1</span>
+         <div>
+           <strong>科幻城市</strong>
+           <p>先玩變形金剛 3D 對決；若要搭太空堡壘，也建議在人潮變多前完成。</p>
+         </div>
+       </li>
+ 
+       <li>
+         <span class="uss-route-number">2</span>
+         <div>
+           <strong>古埃及</strong>
+           <p>接著前往木乃伊復仇記，熱門設施盡量排在上午。</p>
+         </div>
+       </li>
+ 
+       <li>
+         <span class="uss-route-number">3</span>
+         <div>
+           <strong>失落的世界</strong>
+           <p>依排隊時間選擇侏羅紀河流探險或天幕飛行。</p>
+         </div>
+       </li>
+ 
+       <li>
+         <span class="uss-route-number">4</span>
+         <div>
+           <strong>遙遠王國</strong>
+           <p>安排史瑞克 4-D、鞋貓劍客等較輕鬆的設施，順便休息。</p>
+         </div>
+       </li>
+ 
+       <li>
+         <span class="uss-route-number">5</span>
+         <div>
+           <strong>小黃人樂園</strong>
+           <p>下午查看現場等待時間，再決定要玩的設施與拍照位置。</p>
+         </div>
+       </li>
+ 
+       <li>
+         <span class="uss-route-number">6</span>
+         <div>
+           <strong>紐約與好萊塢</strong>
+           <p>最後逛商店、拍照與購買紀念品，準備離園。</p>
+         </div>
+       </li>
+     </ol>
+   </section>
+ 
+   <section class="uss-quick-card" aria-labelledby="uss-quick-title">
+     <div class="uss-guide-kicker">現場快速判斷</div>
+     <h2 id="uss-quick-title">排隊策略</h2>
+ 
+     <div class="uss-quick-grid">
+       <div class="uss-quick-item">
+         <strong>0–25 分鐘</strong>
+         <span>直接排隊</span>
+       </div>
+ 
+       <div class="uss-quick-item">
+         <strong>25–45 分鐘</strong>
+         <span>熱門設施可接受</span>
+       </div>
+ 
+       <div class="uss-quick-item">
+         <strong>45 分鐘以上</strong>
+         <span>先玩其他區域再回來</span>
+       </div>
+ 
+       <div class="uss-quick-item">
+         <strong>多項皆超過 60 分鐘</strong>
+         <span>再評估快速通關</span>
+       </div>
+     </div>
+   </section>
+ 
+   <div class="uss-offline-note">
+     <strong>離線可用</strong>
+     <span>園區地圖會由網站預先快取，即使現場網路不穩也能開啟。</span>
+   </div>
+ </div>
   <!-- MRT Map Fullscreen Modal -->
   <div class="mrt-modal" id="mrtModal" onclick="closeMrtModal()">
     <button class="mrt-modal-close" onclick="closeMrtModal()">✕</button>
