@@ -1,116 +1,46 @@
 (function () {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    });
-  }
+  'use strict';
 
-  document.querySelectorAll('.card').forEach((card, i) => {
-    card.style.animationDelay = (i % 8) * 45 + 'ms';
-    card.classList.add('reveal-card');
-  });
+  const PANEL_NAMES = [
+    'd1',
+    'd2',
+    'd3',
+    'budget',
+    'map',
+    'uss',
+    'private'
+  ];
 
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes rise {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
+  const SUMMARY_VISIBLE_PANELS = new Set([
+    'd1',
+    'd2',
+    'd3'
+  ]);
 
-    .reveal-card {
-      animation: rise .45s both;
-    }
-  `;
-  document.head.appendChild(style);
-})();
+  const TRIP_SUMMARIES = {
+    d1: {
+      title: '今日亮點',
+      main: '星耀樟宜、牛車水與濱海灣',
+      detail: '清晨抵達後進市區，晚上看兩場免費燈光水舞。',
+      tip: '先寄放行李再進市區，晚上回機場取行李後入住。'
+    },
 
-(function () {
-  const top = document.querySelector('.sticky-top');
+    d2: {
+      title: '今日亮點',
+      main: '新加坡環球影城',
+      detail: '上午先玩熱門設施，下午依排隊時間彈性調整。',
+      tip: '先衝變形金剛與木乃伊，超過 45 分鐘的設施晚點再回來。'
+    },
 
-  if (!top) return;
-
-  let compact = false;
-
-  const sync = () => {
-    const next = window.scrollY > 90;
-
-    if (next !== compact) {
-      compact = next;
-      top.classList.toggle('is-compact', compact);
-      document.body.classList.toggle('is-compact', compact);
+    d3: {
+      title: '今日亮點',
+      main: '雨漩渦補拍與返台',
+      detail: '退房後回星耀樟宜，保留充足時間辦理登機。',
+      tip: '確認護照、登機證與行李，至少提前兩小時抵達航廈。'
     }
   };
 
-  window.addEventListener('scroll', sync, { passive: true });
-  sync();
-})();
-
-(function () {
-  if (typeof window.updateTripSummary === 'function') {
-    window.updateTripSummary(
-      document.body.getAttribute('data-active-panel') || 'd1'
-    );
-  }
-
-  const budgetTotal = 21360;
-  let spent = 0;
-  let hasCache = false;
-
-  try {
-    const cached = JSON.parse(
-      localStorage.getItem('expenseCache_singapore') || 'null'
-    );
-
-    if (cached && Array.isArray(cached.rows)) {
-      hasCache = true;
-
-      const rates = {
-        TWD: 1,
-        SGD: 24.5,
-        USD: 32.5,
-        JPY: 0.22
-      };
-
-      spent = Math.round(
-        cached.rows.reduce((sum, row) => {
-          return (
-            sum +
-            (Number(row['金額']) || 0) *
-              (rates[row['幣別'] || 'TWD'] || 1)
-          );
-        }, 0)
-      );
-    }
-  } catch (error) {}
-
-  const spentEl = document.getElementById('budget-spent');
-  const detailEl = document.getElementById('budget-detail');
-
-  if (spentEl) {
-    spentEl.textContent = hasCache
-      ? '已記帳 NT$ ' + spent.toLocaleString()
-      : '預估 NT$ ' + budgetTotal.toLocaleString();
-  }
-
-  if (detailEl) {
-    detailEl.textContent = hasCache
-      ? `剩餘約 NT$ ${Math.max(
-          0,
-          budgetTotal - spent
-        ).toLocaleString()}，資料來自記帳系統。`
-      : '尚無記帳快取，開啟記帳頁後會自動同步。';
-  }
-
-  const weatherMain = document.getElementById('weather-main');
-  const weatherDetail = document.getElementById('weather-detail');
-
-  const codeText = {
+  const WEATHER_TEXT = {
     0: '晴朗',
     1: '大致晴朗',
     2: '局部多雲',
@@ -120,327 +50,990 @@
     51: '毛毛雨',
     53: '毛毛雨',
     55: '較強毛毛雨',
+    56: '凍毛毛雨',
+    57: '強凍毛毛雨',
     61: '小雨',
     63: '中雨',
     65: '大雨',
+    66: '凍雨',
+    67: '強凍雨',
+    71: '小雪',
+    73: '中雪',
+    75: '大雪',
+    77: '米雪',
     80: '陣雨',
     81: '陣雨',
     82: '強陣雨',
-    95: '雷雨'
+    85: '陣雪',
+    86: '強陣雪',
+    95: '雷雨',
+    96: '雷雨伴冰雹',
+    99: '強雷雨伴冰雹'
   };
 
-  fetch(
-    'https://api.open-meteo.com/v1/forecast?latitude=1.3521&longitude=103.8198&current=temperature_2m,apparent_temperature,precipitation,weather_code&timezone=Asia%2FSingapore'
-  )
-    .then((response) => {
-      if (!response.ok) throw new Error('weather');
-      return response.json();
-    })
-    .then((data) => {
-      const weather = data.current || {};
+  let budgetChart = null;
+  let stickyResizeObserver = null;
 
-      if (weatherMain) {
-        weatherMain.innerHTML = `🌤️ <strong>${Math.round(
-          weather.temperature_2m
-        )}°C</strong>`;
-      }
+  function getPanelNameFromButton(button) {
+    if (!button) return null;
 
-      if (weatherDetail) {
-        weatherDetail.textContent = `${
-          codeText[weather.weather_code] || '即時天氣'
-        }，體感 ${Math.round(
-          weather.apparent_temperature
-        )}°C，降雨 ${weather.precipitation || 0} mm。`;
-      }
-    })
-    .catch(() => {
-      if (weatherMain) {
-        weatherMain.innerHTML = '🌤️ <strong>暫時無法更新</strong>';
-      }
+    const handler = button.getAttribute('onclick') || '';
+    const match = handler.match(/switchTab\(['"]([^'"]+)['"]\)/);
 
-      if (weatherDetail) {
-        weatherDetail.textContent = '請確認網路連線後重新整理。';
-      }
-    });
-})();
-
-(function () {
-  const tabBar = document.querySelector('.tab-bar');
-  const tabContent = document.querySelector('.tab-content');
-
-  if (!tabBar || !tabContent || document.getElementById('panel-uss')) {
-    return;
+    return match ? match[1] : null;
   }
 
-  const style = document.createElement('style');
-
-  style.textContent = `
-    .tab-bar {
-      overflow-x: auto;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .tab-bar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .tab-btn {
-      min-width: 76px;
-      flex-shrink: 0;
-    }
-
-    .uss-map-card {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      cursor: zoom-in;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
-    }
-
-    .uss-map-card img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-
-    .uss-map-label {
-      padding: 0.7rem 0.85rem;
-      border-top: 0.5px solid var(--border);
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      gap: 0.75rem;
-    }
-
-    .uss-map-hint {
-      font-weight: 400;
-      color: var(--text-secondary);
-      white-space: nowrap;
-    }
-
-    .uss-route-card {
-      margin-top: 0.75rem;
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.8rem 1rem;
-    }
-
-    .uss-route-title {
-      font-size: 0.82rem;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-
-    .uss-route-text {
-      font-size: 0.78rem;
-      line-height: 1.65;
-      color: var(--text-secondary);
-    }
-
-    .uss-map-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: rgba(0, 0, 0, 0.94);
-      display: none;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 4rem 0.5rem 2rem;
-    }
-
-    .uss-map-modal.open {
-      display: block;
-    }
-
-    .uss-map-modal img {
-      display: block;
-      width: 1800px;
-      max-width: none;
-      height: auto;
-      margin: 0 auto;
-      touch-action: pinch-zoom;
-    }
-
-    .uss-map-close {
-      position: fixed;
-      top: max(0.8rem, env(safe-area-inset-top));
-      right: 0.8rem;
-      z-index: 10000;
-      width: 2.6rem;
-      height: 2.6rem;
-      border: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.94);
-      font-size: 1.2rem;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
-      cursor: pointer;
-    }
-
-    @media (max-width: 640px) {
-      .uss-map-modal img {
-        width: 1500px;
-      }
-
-      .tab-btn {
-        min-width: 70px;
-      }
-
-      .tab-label {
-        font-size: 0.74rem;
-      }
-
-      .tab-sub {
-        font-size: 0.58rem;
-      }
-    }
-  `;
-
-  document.head.appendChild(style);
-
-  const tab = document.createElement('button');
-
-  tab.className = 'tab-btn uss-tab';
-  tab.type = 'button';
-
-  tab.innerHTML = `
-    <div class="tab-dot" style="background:#6B4CC2;"></div>
-    <div class="tab-label">USS 地圖</div>
-    <div class="tab-sub">Park Map</div>
-  `;
-
-  tabBar.appendChild(tab);
-
-  const panel = document.createElement('div');
-
-  panel.className = 'panel';
-  panel.id = 'panel-uss';
-
-  panel.innerHTML = `
-    <div class="panel-dino-hero mrt-dino-hero">
-      <div>
-        <div class="panel-dino-kicker">小暴龍帶路</div>
-        <div class="panel-dino-title">
-          新加坡環球影城園區地圖
-        </div>
-        <div class="panel-dino-note">
-          點擊圖片可全螢幕查看，手機支援雙指縮放。
-        </div>
-      </div>
-
-      <img
-        src="assets/dino/dino-map-guide.png"
-        alt=""
-        aria-hidden="true"
-      >
-    </div>
-
-    <div class="uss-map-card" id="ussMapCard">
-      <img
-        src="images/uss-park-map.webp"
-        alt="新加坡環球影城中文園區地圖"
-      >
-
-      <div class="uss-map-label">
-        <span>USS 中文園區地圖</span>
-        <span class="uss-map-hint">點擊放大</span>
-      </div>
-    </div>
-
-    <div class="uss-route-card">
-      <div class="uss-route-title">建議遊玩方向</div>
-
-      <div class="uss-route-text">
-        科幻城市 → 古埃及 → 失落的世界 → 遙遠王國 →
-        小黃人樂園 → 紐約 → 好萊塢
-      </div>
-    </div>
-  `;
-
-  tabContent.appendChild(panel);
-
-  const modal = document.createElement('div');
-
-  modal.className = 'uss-map-modal';
-  modal.id = 'ussMapModal';
-
-  modal.innerHTML = `
-    <button
-      class="uss-map-close"
-      type="button"
-      aria-label="關閉"
-    >
-      ✕
-    </button>
-
-    <img
-      src="images/uss-park-map.webp"
-      alt="新加坡環球影城中文園區地圖"
-    >
-  `;
-
-  document.body.appendChild(modal);
-
-  const summary = document.querySelector('.trip-summary');
-
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach((button) => {
-      button.classList.remove('active');
+  function findTabButton(panelName) {
+    return Array.from(
+      document.querySelectorAll('.tab-btn')
+    ).find((button) => {
+      return getPanelNameFromButton(button) === panelName;
     });
+  }
 
-    document.querySelectorAll('.panel').forEach((item) => {
-      item.classList.remove('active');
+  function syncStickyHeight() {
+    const stickyTop = document.querySelector('.sticky-top');
+
+    if (!stickyTop) return;
+
+    const height = Math.ceil(
+      stickyTop.getBoundingClientRect().height
+    );
+
+    document.documentElement.style.setProperty(
+      '--sticky-h',
+      `${height}px`
+    );
+  }
+
+  function syncCompactHeader() {
+    const stickyTop = document.querySelector('.sticky-top');
+
+    if (!stickyTop) return;
+
+    const shouldCompact = window.scrollY > 90;
+
+    stickyTop.classList.toggle(
+      'is-compact',
+      shouldCompact
+    );
+
+    document.body.classList.toggle(
+      'is-compact',
+      shouldCompact
+    );
+
+    window.requestAnimationFrame(syncStickyHeight);
+  }
+
+  function setSummaryVisibility(panelName) {
+    const summary = document.querySelector('.trip-summary');
+
+    if (!summary) return;
+
+    summary.hidden = !SUMMARY_VISIBLE_PANELS.has(
+      panelName
+    );
+  }
+
+  function updateTripSummary(panelName) {
+    const summary =
+      TRIP_SUMMARIES[panelName] ||
+      TRIP_SUMMARIES.d1;
+
+    const title = document.getElementById(
+      'highlight-title'
+    );
+
+    const main = document.getElementById(
+      'highlight-main'
+    );
+
+    const detail = document.getElementById(
+      'highlight-detail'
+    );
+
+    const tip = document.getElementById(
+      'dino-tip'
+    );
+
+    if (title) {
+      title.textContent = summary.title;
+    }
+
+    if (main) {
+      main.textContent = summary.main;
+    }
+
+    if (detail) {
+      detail.textContent = summary.detail;
+    }
+
+    if (tip) {
+      tip.textContent = summary.tip;
+    }
+  }
+
+  function scrollActiveTabIntoView(button) {
+    if (!button) return;
+
+    window.requestAnimationFrame(() => {
+      button.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
     });
+  }
 
-    tab.classList.add('active');
-    panel.classList.add('active');
+  function switchTab(panelName) {
+    if (!PANEL_NAMES.includes(panelName)) {
+      panelName = 'd1';
+    }
 
-    document.body.setAttribute('data-active-panel', 'uss');
+    const panel = document.getElementById(
+      `panel-${panelName}`
+    );
 
-    if (summary) {
-      summary.style.display = 'none';
+    if (!panel) return;
+
+    document
+      .querySelectorAll('.panel')
+      .forEach((item) => {
+        item.classList.toggle(
+          'active',
+          item === panel
+        );
+      });
+
+    const activeButton = findTabButton(panelName);
+
+    document
+      .querySelectorAll('.tab-btn')
+      .forEach((button) => {
+        button.classList.toggle(
+          'active',
+          button === activeButton
+        );
+      });
+
+    document.body.setAttribute(
+      'data-active-panel',
+      panelName
+    );
+
+    setSummaryVisibility(panelName);
+    updateTripSummary(panelName);
+    scrollActiveTabIntoView(activeButton);
+
+    if (panelName === 'budget') {
+      renderBudgetChart();
     }
 
     window.scrollTo({
       top: 0,
-      behavior: 'instant'
-    });
-  });
-
-  document
-    .querySelectorAll('.tab-btn:not(.uss-tab)')
-    .forEach((button) => {
-      button.addEventListener('click', () => {
-        if (summary) {
-          summary.style.display = '';
-        }
-      });
+      left: 0,
+      behavior: 'auto'
     });
 
-  const openModal = () => {
+    window.requestAnimationFrame(syncStickyHeight);
+  }
+
+  function openMrtModal(imagePath, title) {
+    const modal = document.getElementById(
+      'mrtModal'
+    );
+
+    const image = document.getElementById(
+      'mrtModalImg'
+    );
+
+    if (!modal || !image || !imagePath) return;
+
+    image.src = imagePath;
+    image.alt = title || '地圖';
+
     modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  };
+    modal.classList.add('active');
 
-  const closeModal = () => {
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeMrtModal() {
+    const modal = document.getElementById(
+      'mrtModal'
+    );
+
+    const image = document.getElementById(
+      'mrtModalImg'
+    );
+
+    if (!modal) return;
+
     modal.classList.remove('open');
-    document.body.style.overflow = '';
-  };
+    modal.classList.remove('active');
 
-  document
-    .getElementById('ussMapCard')
-    .addEventListener('click', openModal);
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
 
-  modal.addEventListener('click', closeModal);
+    if (image) {
+      window.setTimeout(() => {
+        if (
+          !modal.classList.contains('open') &&
+          !modal.classList.contains('active')
+        ) {
+          image.src = '';
+        }
+      }, 150);
+    }
+  }
 
-  modal.querySelector('img').addEventListener('click', (event) => {
-    event.stopPropagation();
-  });
+  async function copyText(elementOrText) {
+    const text =
+      typeof elementOrText === 'string'
+        ? elementOrText
+        : elementOrText?.dataset?.copy ||
+          elementOrText?.textContent?.trim();
 
-  modal
-    .querySelector('.uss-map-close')
-    .addEventListener('click', closeModal);
+    if (!text) return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      showCopyFeedback(elementOrText, '已複製');
+    } catch (error) {
+      const textarea =
+        document.createElement('textarea');
+
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+
+      document.body.appendChild(textarea);
+      textarea.select();
+
+      try {
+        document.execCommand('copy');
+        showCopyFeedback(
+          elementOrText,
+          '已複製'
+        );
+      } catch (copyError) {
+        showCopyFeedback(
+          elementOrText,
+          '複製失敗'
+        );
+      }
+
+      textarea.remove();
+    }
+  }
+
+  function showCopyFeedback(element, message) {
+    if (!(element instanceof HTMLElement)) {
+      return;
+    }
+
+    const original =
+      element.dataset.originalText ||
+      element.innerHTML;
+
+    element.dataset.originalText = original;
+    element.textContent = message;
+
+    window.setTimeout(() => {
+      element.innerHTML = original;
+    }, 1200);
+  }
+
+  function readExpenseCache() {
+    try {
+      const cached = JSON.parse(
+        localStorage.getItem(
+          'expenseCache_singapore'
+        ) || 'null'
+      );
+
+      if (
+        cached &&
+        Array.isArray(cached.rows)
+      ) {
+        return cached.rows;
+      }
+    } catch (error) {
+      console.warn(
+        'Unable to read expense cache.',
+        error
+      );
+    }
+
+    return null;
+  }
+
+  function syncBudgetSummary() {
+    const budgetTotal = 21360;
+    const rows = readExpenseCache();
+
+    const spentElement = document.getElementById(
+      'budget-spent'
+    );
+
+    const detailElement =
+      document.getElementById(
+        'budget-detail'
+      );
+
+    if (!spentElement || !detailElement) {
+      return;
+    }
+
+    if (!rows) {
+      spentElement.textContent =
+        `預估 NT$ ${budgetTotal.toLocaleString()}`;
+
+      detailElement.textContent =
+        '尚無記帳快取，開啟記帳頁後會自動同步。';
+
+      return;
+    }
+
+    const rates = {
+      TWD: 1,
+      SGD: 24.5,
+      USD: 32.5,
+      JPY: 0.22
+    };
+
+    const spent = Math.round(
+      rows.reduce((sum, row) => {
+        const amount =
+          Number(row['金額']) ||
+          Number(row.amount) ||
+          0;
+
+        const currency =
+          row['幣別'] ||
+          row.currency ||
+          'TWD';
+
+        return (
+          sum +
+          amount *
+            (rates[currency] || 1)
+        );
+      }, 0)
+    );
+
+    const remaining = Math.max(
+      0,
+      budgetTotal - spent
+    );
+
+    spentElement.textContent =
+      `已記帳 NT$ ${spent.toLocaleString()}`;
+
+    detailElement.textContent =
+      `剩餘約 NT$ ${remaining.toLocaleString()}，資料來自記帳系統。`;
+  }
+
+  async function loadWeather() {
+    const weatherMain =
+      document.getElementById('weather-main');
+
+    const weatherDetail =
+      document.getElementById(
+        'weather-detail'
+      );
+
+    if (!weatherMain || !weatherDetail) {
+      return;
+    }
+
+    const endpoint =
+      'https://api.open-meteo.com/v1/forecast' +
+      '?latitude=1.3521' +
+      '&longitude=103.8198' +
+      '&current=temperature_2m,' +
+      'apparent_temperature,' +
+      'precipitation,' +
+      'weather_code' +
+      '&timezone=Asia%2FSingapore';
+
+    try {
+      const controller =
+        new AbortController();
+
+      const timeout = window.setTimeout(
+        () => controller.abort(),
+        8000
+      );
+
+      const response = await fetch(endpoint, {
+        signal: controller.signal,
+        cache: 'no-store'
+      });
+
+      window.clearTimeout(timeout);
+
+      if (!response.ok) {
+        throw new Error(
+          `Weather request failed: ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+      const weather = data.current || {};
+
+      const temperature = Number(
+        weather.temperature_2m
+      );
+
+      const apparentTemperature = Number(
+        weather.apparent_temperature
+      );
+
+      const precipitation = Number(
+        weather.precipitation
+      );
+
+      const code = Number(
+        weather.weather_code
+      );
+
+      weatherMain.innerHTML =
+        `🌤️ <strong>${Math.round(
+          temperature
+        )}°C</strong>`;
+
+      weatherDetail.textContent =
+        `${WEATHER_TEXT[code] || '即時天氣'}，` +
+        `體感 ${Math.round(
+          apparentTemperature
+        )}°C，` +
+        `降雨 ${
+          Number.isFinite(precipitation)
+            ? precipitation
+            : 0
+        } mm。`;
+
+      try {
+        localStorage.setItem(
+          'singaporeWeatherCache',
+          JSON.stringify({
+            savedAt: Date.now(),
+            main: weatherMain.innerHTML,
+            detail: weatherDetail.textContent
+          })
+        );
+      } catch (error) {}
+    } catch (error) {
+      const cached = readWeatherCache();
+
+      if (cached) {
+        weatherMain.innerHTML = cached.main;
+        weatherDetail.textContent =
+          `${cached.detail}（離線快取）`;
+
+        return;
+      }
+
+      weatherMain.innerHTML =
+        '🌤️ <strong>暫時無法更新</strong>';
+
+      weatherDetail.textContent =
+        '目前無法取得即時天氣，請確認網路連線。';
+    }
+  }
+
+  function readWeatherCache() {
+    try {
+      const cached = JSON.parse(
+        localStorage.getItem(
+          'singaporeWeatherCache'
+        ) || 'null'
+      );
+
+      if (
+        cached &&
+        cached.main &&
+        cached.detail
+      ) {
+        return cached;
+      }
+    } catch (error) {}
+
+    return null;
+  }
+
+  function renderBudgetChart() {
+    const canvas =
+      document.getElementById(
+        'budgetPieChart'
+      );
+
+    const legend =
+      document.getElementById(
+        'budgetLegend'
+      );
+
+    if (!canvas || !window.Chart) {
+      return;
+    }
+
+    const items = [
+      {
+        label: '機票',
+        value: 6955.26,
+        color: '#4DB6AC'
+      },
+      {
+        label: '住宿',
+        value: 6020.16,
+        color: '#5F7E93'
+      },
+      {
+        label: '環球影城',
+        value: 2014,
+        color: '#6B4CC2'
+      },
+      {
+        label: '網路與保險',
+        value: 1838,
+        color: '#E0A85F'
+      },
+      {
+        label: '餐飲交通與其他',
+        value: 4532.58,
+        color: '#E17A4C'
+      }
+    ];
+
+    if (budgetChart) {
+      budgetChart.destroy();
+      budgetChart = null;
+    }
+
+    budgetChart = new window.Chart(
+      canvas.getContext('2d'),
+      {
+        type: 'doughnut',
+
+        data: {
+          labels: items.map(
+            (item) => item.label
+          ),
+
+          datasets: [
+            {
+              data: items.map(
+                (item) => item.value
+              ),
+
+              backgroundColor: items.map(
+                (item) => item.color
+              ),
+
+              borderWidth: 0,
+              hoverOffset: 3
+            }
+          ]
+        },
+
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '66%',
+
+          plugins: {
+            legend: {
+              display: false
+            },
+
+            tooltip: {
+              callbacks: {
+                label(context) {
+                  const value =
+                    Number(context.raw) || 0;
+
+                  return (
+                    `${context.label}: NT$ ` +
+                    value.toLocaleString(
+                      'zh-TW',
+                      {
+                        maximumFractionDigits: 0
+                      }
+                    )
+                  );
+                }
+              }
+            }
+          }
+        }
+      }
+    );
+
+    if (legend) {
+      const total = items.reduce(
+        (sum, item) => sum + item.value,
+        0
+      );
+
+      legend.innerHTML = items
+        .map((item) => {
+          const percent = Math.round(
+            (item.value / total) * 100
+          );
+
+          return `
+            <div class="chart-legend-row">
+              <span>
+                <span
+                  style="
+                    display:inline-block;
+                    width:9px;
+                    height:9px;
+                    margin-right:6px;
+                    border-radius:50%;
+                    background:${item.color};
+                  "
+                ></span>
+                ${item.label}
+              </span>
+
+              <strong>${percent}%</strong>
+            </div>
+          `;
+        })
+        .join('');
+    }
+  }
+
+  async function unlock() {
+    const input =
+      document.getElementById('lock-pwd');
+
+    const errorElement =
+      document.getElementById(
+        'lock-error'
+      );
+
+    const lockScreen =
+      document.getElementById(
+        'lock-screen'
+      );
+
+    const privateContent =
+      document.getElementById(
+        'private-content'
+      );
+
+    if (
+      !input ||
+      !lockScreen ||
+      !privateContent
+    ) {
+      return;
+    }
+
+    if (errorElement) {
+      errorElement.style.display = 'none';
+    }
+
+    const encrypted =
+      typeof window.ENCRYPTED === 'string'
+        ? window.ENCRYPTED
+        : typeof ENCRYPTED === 'string'
+          ? ENCRYPTED
+          : '';
+
+    if (!encrypted) {
+      showUnlockError(
+        errorElement,
+        '找不到加密內容。'
+      );
+
+      return;
+    }
+
+    try {
+      const html =
+        await decryptEncryptedContent(
+          encrypted,
+          input.value
+        );
+
+      privateContent.innerHTML = html;
+      privateContent.style.display = 'block';
+      lockScreen.style.display = 'none';
+
+      sessionStorage.setItem(
+        'singaporePrivateUnlocked',
+        '1'
+      );
+    } catch (error) {
+      showUnlockError(
+        errorElement,
+        '密碼錯誤，請再試一次'
+      );
+
+      input.select();
+    }
+  }
+
+  function showUnlockError(
+    errorElement,
+    message
+  ) {
+    if (!errorElement) return;
+
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+  }
+
+  async function decryptEncryptedContent(
+    encrypted,
+    password
+  ) {
+    if (!password) {
+      throw new Error('Password required.');
+    }
+
+    if (
+      typeof window.CryptoJS !== 'undefined'
+    ) {
+      const decrypted =
+        window.CryptoJS.AES.decrypt(
+          encrypted,
+          password
+        );
+
+      const result =
+        decrypted.toString(
+          window.CryptoJS.enc.Utf8
+        );
+
+      if (!result) {
+        throw new Error(
+          'Unable to decrypt content.'
+        );
+      }
+
+      return result;
+    }
+
+    throw new Error(
+      'CryptoJS is unavailable.'
+    );
+  }
+
+  function restorePrivateSession() {
+    if (
+      sessionStorage.getItem(
+        'singaporePrivateUnlocked'
+      ) !== '1'
+    ) {
+      return;
+    }
+
+    /*
+     * 密碼本身不儲存在瀏覽器，因此重新整理後仍需再次輸入。
+     * 只保留狀態欄位，避免把敏感密碼寫入 localStorage。
+     */
+    sessionStorage.removeItem(
+      'singaporePrivateUnlocked'
+    );
+  }
+
+  function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+      return;
+    }
+
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('./sw.js')
+        .catch((error) => {
+          console.warn(
+            'Service worker registration failed.',
+            error
+          );
+        });
+    });
+  }
+
+  function enhanceCards() {
+    const style =
+      document.createElement('style');
+
+    style.textContent = `
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .reveal-card {
+        animation: rise .42s both;
+      }
+    `;
+
+    document.head.appendChild(style);
+
+    document
+      .querySelectorAll(
+        '.card, .budget-card, .mrt-card, ' +
+        '.uss-guide-card, .uss-quick-card'
+      )
+      .forEach((card, index) => {
+        card.style.animationDelay =
+          `${(index % 8) * 35}ms`;
+
+        card.classList.add('reveal-card');
+      });
+  }
+
+  function bindEvents() {
+    const modal =
+      document.getElementById('mrtModal');
+
+    if (modal) {
+      modal.setAttribute(
+        'aria-hidden',
+        'true'
+      );
+    }
+
+    document.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key === 'Escape') {
+          closeMrtModal();
+        }
+      }
+    );
+
+    window.addEventListener(
+      'resize',
+      () => {
+        window.requestAnimationFrame(
+          syncStickyHeight
+        );
+      },
+      {
+        passive: true
+      }
+    );
+
+    window.addEventListener(
+      'orientationchange',
+      () => {
+        window.setTimeout(
+          syncStickyHeight,
+          200
+        );
+      }
+    );
+
+    window.addEventListener(
+      'scroll',
+      syncCompactHeader,
+      {
+        passive: true
+      }
+    );
+
+    window.addEventListener(
+      'storage',
+      (event) => {
+        if (
+          event.key ===
+          'expenseCache_singapore'
+        ) {
+          syncBudgetSummary();
+        }
+      }
+    );
+
+    if (
+      typeof window.ResizeObserver !==
+      'undefined'
+    ) {
+      const stickyTop =
+        document.querySelector(
+          '.sticky-top'
+        );
+
+      if (stickyTop) {
+        stickyResizeObserver =
+          new ResizeObserver(
+            syncStickyHeight
+          );
+
+        stickyResizeObserver.observe(
+          stickyTop
+        );
+      }
+    }
+  }
+
+  function initialize() {
+    registerServiceWorker();
+    restorePrivateSession();
+    bindEvents();
+    enhanceCards();
+    syncBudgetSummary();
+    loadWeather();
+
+    const requestedPanel =
+      window.location.hash
+        .replace(/^#/, '')
+        .replace(/^panel-/, '');
+
+    const initialPanel =
+      PANEL_NAMES.includes(requestedPanel)
+        ? requestedPanel
+        : document.body.getAttribute(
+            'data-active-panel'
+          ) || 'd1';
+
+    switchTab(initialPanel);
+    syncCompactHeader();
+    syncStickyHeight();
+
+    window.setTimeout(
+      syncStickyHeight,
+      250
+    );
+  }
+
+  window.switchTab = switchTab;
+  window.updateTripSummary =
+    updateTripSummary;
+
+  window.openMrtModal = openMrtModal;
+  window.closeMrtModal = closeMrtModal;
+
+  window.copyText = copyText;
+  window.unlock = unlock;
+
+  if (
+    document.readyState === 'loading'
+  ) {
+    document.addEventListener(
+      'DOMContentLoaded',
+      initialize,
+      {
+        once: true
+      }
+    );
+  } else {
+    initialize();
+  }
 })();
