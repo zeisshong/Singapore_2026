@@ -274,6 +274,11 @@
     <div class="tab-label">Day 2</div>
     <div class="tab-sub">7/23 (四)</div>
   </button>
+  <button class="tab-btn uss" onclick="switchTab('uss')">
+    <div class="tab-dot" style="background:#7558C8;"></div>
+    <div class="tab-label">USS 攻略</div>
+    <div class="tab-sub">Park Map</div>
+  </button>
   <button class="tab-btn d3" onclick="switchTab('d3')">
     <div class="tab-dot"></div>
     <div class="tab-label">Day 3</div>
@@ -285,22 +290,15 @@
     <div class="tab-sub">總覽</div>
   </button>
   <button class="tab-btn" onclick="switchTab('map')">
-  <div class="tab-dot" style="background:#D4537E;"></div>
-  <div class="tab-label">地鐵圖</div>
-  <div class="tab-sub">MRT Map</div>
-</button>
-
-<button class="tab-btn uss" onclick="switchTab('uss')">
-  <div class="tab-dot"></div>
-  <div class="tab-label">USS 地圖</div>
-  <div class="tab-sub">Park Map</div>
-</button>
-
-<button class="tab-btn" onclick="switchTab('private')">
-  <div class="tab-dot" style="background:#E74C3C;"></div>
-  <div class="tab-label">旅遊資訊</div>
-  <div class="tab-sub">🔒 加密</div>
-</button>
+    <div class="tab-dot" style="background:#D4537E;"></div>
+    <div class="tab-label">地鐵圖</div>
+    <div class="tab-sub">MRT Map</div>
+  </button>
+  <button class="tab-btn" onclick="switchTab('private')">
+    <div class="tab-dot" style="background:#E74C3C;"></div>
+    <div class="tab-label">旅遊資訊</div>
+    <div class="tab-sub">🔒 加密</div>
+  </button>
 </div>
 </div>
 
@@ -602,6 +600,7 @@
           <div class="tags"><span class="tag trans">島內步行</span><span class="tag sight">環球影城</span></div>
           <div class="cost">門票（建議 Klook 預購）：<span class="cost-val">約 $2,150 TWD</span></div>
           <div class="tip">💡 16:00 前離園搭 MRT 較不趕；若改叫 Grab 回程可玩到 16:30–17:00</div>
+          <button class="uss-guide-link" type="button" onclick="switchTab('uss')">🦖 查看 USS 地圖與家庭攻略</button>
           <a class="map-link" href="https://maps.app.goo.gl/nTucMJ1Xcdu2zNpH8">新加坡環球影城</a>
         </div>
       </div>
@@ -660,6 +659,106 @@
       </div>
 
     </div>
+  </div>
+
+  <!-- USS Family Guide -->
+  <div class="panel uss-panel" id="panel-uss">
+    <div class="panel-dino-hero uss-dino-hero">
+      <div>
+        <div class="panel-dino-kicker">家庭恐龍版</div>
+        <div class="panel-dino-title">無快速通關也能舒服玩：恐龍優先、三代同行、16:00 離園。</div>
+        <div class="panel-dino-note">不用設施全制霸，每區抓一個亮點，依官方 App 的表演時間彈性調整。</div>
+      </div>
+      <img src="assets/dino/dino-map-guide.png" alt="" aria-hidden="true">
+    </div>
+
+    <div class="uss-status-grid" aria-label="本次遊園原則">
+      <div class="uss-status"><span>👨‍👩‍👧</span><strong>家庭慢遊</strong><small>長輩與小學生同行</small></div>
+      <div class="uss-status"><span>🎟️</span><strong>一般門票</strong><small>不購買快速通關</small></div>
+      <div class="uss-status"><span>🦖</span><strong>恐龍優先</strong><small>失落的世界是主行程</small></div>
+      <div class="uss-status"><span>🕓</span><strong>16:00 離園</strong><small>15:40 開始往出口移動</small></div>
+    </div>
+
+    <section class="uss-section" aria-labelledby="uss-route-title">
+      <div class="uss-section-kicker">推薦動線 · 家庭路線</div>
+      <h2 class="uss-section-title" id="uss-route-title">入口左轉，順時針慢慢逛</h2>
+      <p class="uss-section-intro">小黃人樂園與遙遠王國不久排，將主要時間留給喜歡恐龍的小朋友。</p>
+
+      <ol class="uss-route">
+        <li>
+          <span class="uss-route-num">1</span>
+          <div><strong>小黃人樂園</strong><p>先看排隊與表演時間；20 分鐘內可選一項，否則拍照後繼續前進。</p></div>
+        </li>
+        <li>
+          <span class="uss-route-num">2</span>
+          <div><strong>遙遠王國</strong><p>以史瑞克 4-D、Donkey Live 等全家可參與的內容為主；雲霄飛車類有興趣再玩。</p></div>
+        </li>
+        <li class="uss-route-featured">
+          <span class="uss-route-num">3</span>
+          <div><strong>失落的世界 · 今日主角</strong><p>保留 60–90 分鐘給 Raptor Encounter、Hatched! 小恐龍孵化表演與 Dino-Soarin’。侏羅紀河流探險可能全身濕透，可由小學生與一位成人選玩。</p></div>
+        </li>
+        <li>
+          <span class="uss-route-num">4</span>
+          <div><strong>古埃及</strong><p>以場景拍照為主；木乃伊復仇記刺激度較高，不列為本團必玩。</p></div>
+        </li>
+        <li>
+          <span class="uss-route-num">5</span>
+          <div><strong>科幻城市</strong><p>太空堡壘直接跳過。變形金剛若小學生想玩，可由一位成人陪同，長輩在附近休息。</p></div>
+        </li>
+        <li>
+          <span class="uss-route-num">6</span>
+          <div><strong>紐約與好萊塢</strong><p>安排 Sesame Street、Lights, Camera, Action、期間限定小黃人活動、拍照與購物，最後順路離園。</p></div>
+        </li>
+      </ol>
+    </section>
+
+    <div class="uss-alert" role="note">
+      <strong>⚠️ 7/23 已知停駛</strong>
+      <span>WaterWorld 水世界停駛至 2026/12/31；Accelerator 旋轉飛盤於 2026/7/6–8/7 停駛。當天仍以 USS 官方 App 公告為準。</span>
+    </div>
+
+    <section class="uss-section" aria-labelledby="uss-queue-title">
+      <div class="uss-section-kicker">現場快速判斷</div>
+      <h2 class="uss-section-title" id="uss-queue-title">不買快速通關的排隊策略</h2>
+      <div class="uss-queue-grid">
+        <div><strong>0–20 分鐘</strong><span>全家有興趣就排</span></div>
+        <div><strong>20–35 分鐘</strong><span>只留給恐龍、兒童喜歡或固定場次</span></div>
+        <div><strong>35 分鐘以上</strong><span>直接跳過，繼續逛下一區</span></div>
+        <div><strong>15:15 之後</strong><span>不加入超過 20–25 分鐘的隊伍</span></div>
+      </div>
+      <p class="uss-inline-tip">💡 不為單一設施折返兩次以上；入園先查看恐龍見面、小恐龍孵化與小黃人活動時間。</p>
+    </section>
+
+    <section class="uss-section" aria-labelledby="uss-time-title">
+      <div class="uss-section-kicker">約 6 小時</div>
+      <h2 class="uss-section-title" id="uss-time-title">建議時間配置</h2>
+      <div class="uss-schedule">
+        <div><time>10:00–10:40</time><span>小黃人樂園／遙遠王國，避免久排</span></div>
+        <div class="uss-schedule-featured"><time>10:40–12:10</time><span>失落的世界 · 恐龍主行程</span></div>
+        <div><time>12:10–13:00</time><span>午餐、補水與休息</span></div>
+        <div><time>13:00–14:15</time><span>古埃及、科幻城市，以拍照與選玩為主</span></div>
+        <div><time>14:15–15:20</time><span>紐約、好萊塢與期間限定活動</span></div>
+        <div><time>15:20–15:40</time><span>購物、拍入口照片，準備離園</span></div>
+      </div>
+    </section>
+
+    <section class="uss-section uss-practical" aria-labelledby="uss-practical-title">
+      <div class="uss-section-kicker">同行與天氣備案</div>
+      <h2 class="uss-section-title" id="uss-practical-title">不用所有人同進同退</h2>
+      <div class="uss-practical-grid">
+        <div><strong>👨‍👩‍👧 全員同行</strong><p>拍照、角色見面、表演、4-D 劇場與商店。</p></div>
+        <div><strong>🧒 小學生＋一位成人</strong><p>選玩侏羅紀河流探險、變形金剛等設施；現場先確認身高限制。</p></div>
+        <div><strong>🪑 長輩休息</strong><p>可在附近座位、餐廳或商店等候，不必在刺激設施外久站。</p></div>
+        <div><strong>🌦️ 雷雨備案</strong><p>天氣穩定時先玩戶外恐龍設施；下雨改看室內劇場與動感設施。</p></div>
+      </div>
+    </section>
+
+    <div class="mrt-card uss-map-card" role="button" tabindex="0" aria-label="放大新加坡環球影城園區地圖" onclick="openMrtModal('images/uss_park_map.webp','新加坡環球影城園區地圖')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openMrtModal('images/uss_park_map.webp','新加坡環球影城園區地圖');}">
+      <img src="images/uss_park_map.webp" alt="新加坡環球影城園區地圖" class="mrt-thumb">
+      <div class="mrt-card-label">USS 園區地圖 · 高解析度<span class="mrt-tap-hint">點擊放大</span></div>
+    </div>
+
+    <a class="uss-app-link" href="https://www.rwsentosa.com/en/play/universal-studios-singapore/mobile-app" target="_blank" rel="noopener">📱 開啟 USS 官方 App 下載頁 · 查看即時排隊與表演時間</a>
   </div>
 
   <!-- Day 3 -->
@@ -834,138 +933,6 @@
     </div>
   </div>
 
-  <!-- Universal Studios Singapore Map -->
- <div class="panel" id="panel-uss">
-   <div class="panel-dino-hero uss-dino-hero">
-     <div>
-       <div class="panel-dino-kicker">小暴龍帶路</div>
-       <div class="panel-dino-title">新加坡環球影城中文園區地圖</div>
-       <div class="panel-dino-note">
-         點擊地圖可全螢幕查看，手機與 iPad 可雙指縮放。
-       </div>
-     </div>
- 
-     <img
-       src="assets/dino/dino-map-guide.png"
-       alt=""
-       aria-hidden="true"
-     >
-   </div>
- 
-   <button
-     class="mrt-card uss-map-card"
-     type="button"
-     onclick="openMrtModal('images/uss-park-map.webp','新加坡環球影城中文園區地圖')"
-     aria-label="放大新加坡環球影城園區地圖"
-   >
-     <img
-       src="images/uss-park-map.webp"
-       alt="新加坡環球影城中文園區地圖"
-       class="mrt-thumb uss-map-thumb"
-       width="2400"
-       height="1697"
-       decoding="async"
-     >
- 
-     <div class="mrt-card-label">
-       中文園區地圖
-       <span class="mrt-tap-hint">點擊放大</span>
-     </div>
-   </button>
- 
-   <section class="uss-guide-card" aria-labelledby="uss-route-title">
-     <div class="uss-guide-heading">
-       <div>
-         <div class="uss-guide-kicker">推薦動線</div>
-         <h2 id="uss-route-title">入園後逆時針遊玩</h2>
-       </div>
- 
-       <span class="uss-guide-time">約 6 小時</span>
-     </div>
- 
-     <ol class="uss-route-list">
-       <li>
-         <span class="uss-route-number">1</span>
-         <div>
-           <strong>科幻城市</strong>
-           <p>先玩變形金剛 3D 對決；若要搭太空堡壘，也建議在人潮變多前完成。</p>
-         </div>
-       </li>
- 
-       <li>
-         <span class="uss-route-number">2</span>
-         <div>
-           <strong>古埃及</strong>
-           <p>接著前往木乃伊復仇記，熱門設施盡量排在上午。</p>
-         </div>
-       </li>
- 
-       <li>
-         <span class="uss-route-number">3</span>
-         <div>
-           <strong>失落的世界</strong>
-           <p>依排隊時間選擇侏羅紀河流探險或天幕飛行。</p>
-         </div>
-       </li>
- 
-       <li>
-         <span class="uss-route-number">4</span>
-         <div>
-           <strong>遙遠王國</strong>
-           <p>安排史瑞克 4-D、鞋貓劍客等較輕鬆的設施，順便休息。</p>
-         </div>
-       </li>
- 
-       <li>
-         <span class="uss-route-number">5</span>
-         <div>
-           <strong>小黃人樂園</strong>
-           <p>下午查看現場等待時間，再決定要玩的設施與拍照位置。</p>
-         </div>
-       </li>
- 
-       <li>
-         <span class="uss-route-number">6</span>
-         <div>
-           <strong>紐約與好萊塢</strong>
-           <p>最後逛商店、拍照與購買紀念品，準備離園。</p>
-         </div>
-       </li>
-     </ol>
-   </section>
- 
-   <section class="uss-quick-card" aria-labelledby="uss-quick-title">
-     <div class="uss-guide-kicker">現場快速判斷</div>
-     <h2 id="uss-quick-title">排隊策略</h2>
- 
-     <div class="uss-quick-grid">
-       <div class="uss-quick-item">
-         <strong>0–25 分鐘</strong>
-         <span>直接排隊</span>
-       </div>
- 
-       <div class="uss-quick-item">
-         <strong>25–45 分鐘</strong>
-         <span>熱門設施可接受</span>
-       </div>
- 
-       <div class="uss-quick-item">
-         <strong>45 分鐘以上</strong>
-         <span>先玩其他區域再回來</span>
-       </div>
- 
-       <div class="uss-quick-item">
-         <strong>多項皆超過 60 分鐘</strong>
-         <span>再評估快速通關</span>
-       </div>
-     </div>
-   </section>
- 
-   <div class="uss-offline-note">
-     <strong>離線可用</strong>
-     <span>園區地圖會由網站預先快取，即使現場網路不穩也能開啟。</span>
-   </div>
- </div>
   <!-- MRT Map Fullscreen Modal -->
   <div class="mrt-modal" id="mrtModal" onclick="closeMrtModal()">
     <button class="mrt-modal-close" onclick="closeMrtModal()">✕</button>
@@ -1025,12 +992,18 @@ updateStickyHeight();
 function switchTab(id) {
   document.querySelectorAll('.tab-btn').forEach(function(btn) { btn.classList.remove('active'); });
   document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
-  var map = { d1: 0, d2: 1, d3: 2, budget: 3, map: 4, private: 5 };
-  document.querySelectorAll('.tab-btn')[map[id]].classList.add('active');
+  var map = { d1: 0, d2: 1, uss: 2, d3: 3, budget: 4, map: 5, private: 6 };
+  var activeBtn = document.querySelectorAll('.tab-btn')[map[id]];
+  activeBtn.classList.add('active');
   document.getElementById('panel-' + id).classList.add('active');
   document.body.setAttribute('data-active-panel', id);
   updateTripSummary(id);
   window.scrollTo({ top: 0, behavior: 'instant' });
+  var tabBar = activeBtn.parentElement;
+  if (tabBar && typeof tabBar.scrollTo === 'function') {
+    var targetLeft = activeBtn.offsetLeft - (tabBar.clientWidth - activeBtn.offsetWidth) / 2;
+    tabBar.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+  }
   if (id === 'private' && _unlocked) {
     document.getElementById('lock-screen').style.display = 'none';
     document.getElementById('private-content').style.display = 'block';
