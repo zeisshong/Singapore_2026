@@ -190,6 +190,9 @@ body[data-active-panel="private"] .tab-content,
 body[data-active-panel="uss"] .tab-content{
   padding-top:calc(var(--sticky-h,390px) + 16px)!important;
 }
+body[data-active-panel="uss"] .uss-panel{
+  scroll-margin-top:calc(var(--sticky-h,390px) + 16px);
+}
 body.is-compact[data-active-panel="budget"] .tab-content,
 body.is-compact[data-active-panel="map"] .tab-content,
 body.is-compact[data-active-panel="private"] .tab-content,

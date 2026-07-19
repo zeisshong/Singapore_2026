@@ -987,6 +987,16 @@ function updateStickyHeight() {
 }
 window.addEventListener('load', updateStickyHeight);
 window.addEventListener('resize', updateStickyHeight);
+if ('ResizeObserver' in window) {
+  var stickyHeightObserver = new ResizeObserver(function() {
+    updateStickyHeight();
+  });
+  var stickyTop = document.querySelector('.sticky-top');
+  if (stickyTop) stickyHeightObserver.observe(stickyTop);
+}
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(updateStickyHeight);
+}
 updateStickyHeight();
 
 function switchTab(id) {
@@ -998,7 +1008,11 @@ function switchTab(id) {
   document.getElementById('panel-' + id).classList.add('active');
   document.body.setAttribute('data-active-panel', id);
   updateTripSummary(id);
-  window.scrollTo({ top: 0, behavior: 'instant' });
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  requestAnimationFrame(function() {
+    updateStickyHeight();
+    window.scrollTo(0, 0);
+  });
   var tabBar = activeBtn.parentElement;
   if (tabBar && typeof tabBar.scrollTo === 'function') {
     var targetLeft = activeBtn.offsetLeft - (tabBar.clientWidth - activeBtn.offsetWidth) / 2;
